@@ -1,0 +1,29 @@
+---
+title       : Exploratory Data Analysis with R
+subtitle    : 智庫驅動
+author      : Wush Wu
+job         : 
+framework   : io2012-wush
+highlighter : highlight.js
+hitheme     : zenburn
+widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+--- &twocol .largecontent
+
+```{r setup, include=FALSE}
+fig <- function(path, size = 100) {
+  sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
+          path, size, size)
+}
+```
+
+## 關於講師
+
+*** =left
+
+Wush Wu
+
+*** =right
+
+`r fig("wush.jpg")`
