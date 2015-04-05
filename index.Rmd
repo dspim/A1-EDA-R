@@ -3,7 +3,7 @@ title       : Exploratory Data Analysis with R
 subtitle    : 智庫驅動
 author      : Wush Wu
 job         : 
-framework   : io2012-wush
+framework   : io2012-dsp
 highlighter : highlight.js
 hitheme     : zenburn
 widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
@@ -11,19 +11,191 @@ mode        : selfcontained # {standalone, draft}
 knit        : slidify::knit2slides
 --- &twocol .largecontent
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+library(magrittr)
+library(xtable)
+opts_chunk$set(echo = FALSE, cache=TRUE)
 fig <- function(path, size = 100) {
   sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
           path, size, size)
 }
+sys_name <- Sys.info()["sysname"] %>% tolower
+sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
 ```
 
 ## 關於講師
 
 *** =left
 
-Wush Wu
+### Wush Wu
+
+- Taiwan R User Group 共同創辦人
+- 以下R 套件的貢獻者:
+    - FeatureHashing
+    - digest
+    - rcppcnpy
+    - knitr
+- 臺大電機所博士生
 
 *** =right
 
 `r fig("wush.jpg")`
+
+--- &vcenter .largecontent
+
+<center>`r fig("Data_visualization_process_v1.png", 75)`</center>
+
+出處：<http://en.wikipedia.org/wiki/File:Data_visualization_process_v1.png>
+
+--- &vcenter .largecontent
+
+## 大綱
+
+- EDA的目的
+- 如何掌握資料的脈絡
+- 觀察數據的工具
+- 資料集範例
+
+--- .dark .segue
+
+## EDA的目的
+
+--- &vcenter .largecontent
+
+## Tukey, John W. (1977). Exploratory Data Analysis. Pearson. ISBN 978-0201076165. 
+
+- 尋找現象中可能的因果關係
+- 確認進階分析中的假設是否合理
+- 選擇正確的分析工具和技術
+- 建議未來的數據收集方向
+- 檢查資料的正確性
+
+--- &vcenter .largecontent
+
+## 檢查資料的正確性
+
+--- &vcenter .largecontent
+
+## 尋找現象中可能的因果關係
+
+--- &vcenter .largecontent
+
+## 確認進階分析中的假設是否合理
+
+--- &vcenter .largecontent
+
+## 選擇正確的分析工具和技術
+
+--- &vcenter .largecontent
+
+## 建議未來的數據收集方向
+
+--- &vcenter .largecontent
+
+## 實例 - 發現問題的因果
+
+--- .dark .segue
+
+## 如何掌握資料的脈絡
+
+--- &vcenter .largecontent
+
+- 了解資料的格式與物理意義
+- 了解資料的欄位與對應的類型
+- 檢查和整理資料
+
+--- &vcenter .largecontent
+
+## 了解資料的格式與物理意義
+
+### Kaggle
+
+`r fig("kaggle-march-machine-learning-mania-2015.png")`
+
+--- &vcenter .largecontent
+
+## 了解資料的格式與物理意義
+
+### Ubike
+
+```{r loadubike, echo = FALSE, cache=TRUE}
+if (!file.exists(ubike_path <- sprintf("data/ubike-DT-%s.rds", sys_encode))) {
+  stop("TODO: implement downloading ubike")
+}
+ubike <- readRDS(ubike_path)
+```
+
+```{r eda-ubike, echo = FALSE, dependson="loadubike", results='asis'}
+head(ubike) %>%
+  `[`(c(1, 2, 4, 5, 6, 7)) %>%
+  xtable %>%
+  print.xtable(type = "html", include.rownames = FALSE)
+```
+
+--- &vcenter .largecontent
+
+## 了解資料的欄位與對應的類型
+
+- 數值型變數
+- 類別型變數
+- 標籤型變數
+
+--- &vcenter .largecontent
+
+## 了解資料的欄位與對應的類型 - 數值型變數
+
+--- &vcenter .largecontent
+
+## 了解資料的欄位與對應的類型 - 類別型變數
+
+--- &vcenter .largecontent
+
+## 了解資料的欄位與對應的類型 - 標籤型變數
+
+--- &vcenter .largecontent
+
+## 檢查和整理資料
+
+- 檢查資料是否正確
+- 檢查資料內容和物理意義的一致性
+
+--- .segue .dark
+
+## 觀察數據的工具
+
+--- &vcenter .largecontent
+
+## 呈現單一欄位的資料
+
+- 數值型變數
+- 類別型變數
+
+--- &vcenter .largecontent
+
+## 類別型變數
+
+- 各類別的分佈
+    - 類別的出現是否集中
+
+--- &vcenter .largecontent
+
+## 呈現單一欄位的資料 - 數值型變數
+
+- 拓撲性質
+- 中心位置
+- 分散程度
+
+--- &vcenter .largecontent
+
+## 呈現單一欄位的資料 - 拓撲性質
+
+- 單峰或雙峰
+- 左偏或右偏
+
+--- &vcenter .largecontent
+
+## 呈現單一欄位的資料 - 中心位置
+
+- 平均數：$min \sum{(x_i - m)^2}$
+- 中位數：$min \sum{\left|x_i - m\right|}$

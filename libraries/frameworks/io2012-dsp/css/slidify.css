@@ -397,7 +397,7 @@ pre > code {
 
 .title-slide {
   background-color: #FFFFFF; /* #EDE0CF; ; #CA9F9D*/
-  background-image: url('libraries/frameworks/io2012-wush/images/background.png'); 
+  background-image: url('../images/dsp-front-cover.png'); 
   background-repeat:no-repeat; 
   background-position:center; 
   background-size: 100% 100%;
@@ -405,17 +405,26 @@ pre > code {
 
 .title-slide hgroup {
   position:relative; 
-  top: 50%; 
-  left: 50%; 
+  top: 25%; 
+  left: 25%; 
 }
 
-.title-slide hgroup > h1{
+.title-slide hgroup > h1 {
  font-family: 'Oswald', 'Helvetica', sanserif; 
 }
 
-.title-slide hgroup > h1, 
+.title-slide hgroup > h1 {
+  color: #535E43 ;  /* ; #EF5150 */
+  font-size: 250%;
+} 
+
 .title-slide hgroup > h2 {
   color: #535E43 ;  /* ; #EF5150 */
-  font-size: 150%;
+  font-size: 200%;
 }
 
+.title-slide hgroup > p {
+  color: #535E43 ;  /* ; #EF5150 */
+  font-size: 125%;
+  margin-top: 5pt;
+}
