@@ -15,13 +15,34 @@ knit        : slidify::knit2slides
 library(knitr)
 library(magrittr)
 library(xtable)
+library(data.table)
+library(dplyr)
+library(broom)
+library(ggplot2)
+library(quantmod)
+library(pander)
+library(wordcloud)
+library(RColorBrewer)
 opts_chunk$set(echo = FALSE, cache=TRUE)
-fig <- function(path, size = 100) {
+fit100 <- fig <- function(path, size = 100) {
   sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
           path, size, size)
 }
+fig2 <- function(path, size = 100) {
+  sprintf("<img src='assets/img/%s' style='width: %d%%'></img>", 
+          path, size)
+}
 sys_name <- Sys.info()["sysname"] %>% tolower
-sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
+sys_encode <- c("utf8", "utf8", "big5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
+sessionInfo() %>% capture.output %>% cat(file = "sessionInfo.log", sep = "\n")
+thm <- theme(text=element_text(size=18))
+las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r loadubike, echo = FALSE, cache=TRUE}
+ubike_path <- sprintf("data/ubikeweather%s.csv", sys_encode)
+ubike <- fread(ubike_path, header = TRUE, showProgress = interactive(), data.table = FALSE)
+# ubike <- readRDS("data/ubike-weather-utf8.rds")
 ```
 
 ## 關於講師
@@ -52,10 +73,9 @@ sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin",
 
 ## 大綱
 
-- EDA的目的
+- EDA 的目的
 - 如何掌握資料的脈絡
-- 觀察數據的工具
-- 資料集範例
+- 觀察數據的方法
 
 --- .dark .segue
 
@@ -65,41 +85,95 @@ sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin",
 
 ## Tukey, John W. (1977). Exploratory Data Analysis. Pearson. ISBN 978-0201076165. 
 
+- 檢查資料的正確性
 - 尋找現象中可能的因果關係
 - 確認進階分析中的假設是否合理
 - 選擇正確的分析工具和技術
 - 建議未來的數據收集方向
-- 檢查資料的正確性
 
---- &vcenter .largecontent
+--- &twocol .largecontent
 
 ## 檢查資料的正確性
 
---- &vcenter .largecontent
+*** =left
 
-## 尋找現象中可能的因果關係
+- 錯誤的資料很常見
+    - 輸入錯誤
+    - 處理的程式錯誤
+    - 對資料的值解釋錯誤
 
---- &vcenter .largecontent
+`r fig("johnson_haha.png")`
+
+*** =right
+
+`r fig("incorrect_temperature.png")`
+
+--- &twocol .largecontent
+
+## 尋找數據中潛在的因果關係
+
+*** =left
+
+- 因果關係不容易發現
+- 需要對問題本質的理解，加上數據的佐證
+
+*** =right
+
+```{r ubike-hour-temp, dependson="loadubike"}
+ubike.hour.temp <- filter(ubike, grepl("2015-02", date)) %>% group_by(hour) %>% summarise(temp.avg = mean(temp)) %>% as.data.frame
+(ubike.hour.temp %>% ggplot(aes(x = hour, y = temp.avg))) + geom_line() + thm
+```
+
+--- &twocol .largecontent
 
 ## 確認進階分析中的假設是否合理
 
---- &vcenter .largecontent
+*** =left
+
+- 可以用常態分佈來描述這個數據嗎？
+
+*** =right
+
+```{r ubike-hour-temp-density, dependson="loadubike"}
+filter(ubike, grepl("2015-02", date)) %>% select(temp) %>% ggplot(aes(x = temp)) +
+  geom_density() + thm
+```
+
+--- &twocol .largecontent
 
 ## 選擇正確的分析工具和技術
 
+*** =left
+
+- 是線性關係，還是非線性關係呢？
+
+*** =right
+
+```{r cars1, warning=FALSE}
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point() +
+  geom_smooth(method = lm, se = TRUE) +
+  thm
+```
+
 --- &vcenter .largecontent
 
-## 建議未來的數據收集方向
+## 建議未來的數據收集方向和分析方向
 
---- &vcenter .largecontent
-
-## 實例 - 發現問題的因果
+```{r future, dependson="loadubike"}
+filter(ubike, sno == 1) %>% group_by(date) %>% summarise(avg.sbi = mean(avg.sbi), rainfall = mean(rainfall)) %>% 
+  ggplot(aes(x = rainfall, y = avg.sbi, group = "Ubike")) +
+  geom_point() + 
+  thm
+```
 
 --- .dark .segue
 
 ## 如何掌握資料的脈絡
 
 --- &vcenter .largecontent
+
+## 如何掌握資料的脈絡
 
 - 了解資料的格式與物理意義
 - 了解資料的欄位與對應的類型
@@ -119,16 +193,9 @@ sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin",
 
 ### Ubike
 
-```{r loadubike, echo = FALSE, cache=TRUE}
-if (!file.exists(ubike_path <- sprintf("data/ubike-DT-%s.rds", sys_encode))) {
-  stop("TODO: implement downloading ubike")
-}
-ubike <- readRDS(ubike_path) %>%
-  `[`(c(1, 2, 4, 5, 6, 7))
-```
-
 ```{r eda-ubike, echo = FALSE, dependson="loadubike", results='asis'}
 head(ubike) %>%
+  `[`(c(1, 2, 4, 5, 6, 7)) %>%
   xtable %>%
   print.xtable(type = "html", include.rownames = FALSE)
 ```
@@ -145,13 +212,63 @@ head(ubike) %>%
 
 ## 了解資料的欄位與對應的類型 - 數值型變數
 
+- 一定是以數字表示
+- 可以做加法和減法的運算
+- 一定擁有相對的大小關係
+- 範例
+    - 氣溫
+    - 時間
+    - 價格
+    - 數量
+
 --- &vcenter .largecontent
 
 ## 了解資料的欄位與對應的類型 - 類別型變數
 
---- &vcenter .largecontent
+- 可能是以數字表示
+- 不能做加法和減法的運算
+- 不一定擁有相對的大小關係
+- 範例
+    - 日期、月份
+    - 性別
+    - 數值區間，如年齡區間
+
+--- &twocol .largecontent
 
 ## 了解資料的欄位與對應的類型 - 標籤型變數
+
+*** =left
+
+- 通常是類別型或數值型變數的壓縮
+- 已經被定義在某些資料庫系統之中
+- 轉換為對應的類別型變數與數值型變數
+- 範例
+    - 文章分類標籤
+    - 臉書標籤
+
+*** =right
+
+`r fig("facebookhashtag.png")`
+出處: <http://www.techbang.com/posts/13673-import-facebook-official-hashtag-label-features-marked-with-a-keywords>
+
+--- &twocol .largecontent
+
+## 數值型變數可以轉換為類別型變數
+
+- [Data Binning](http://en.wikipedia.org/wiki/Data_binning)
+
+*** =left
+
+```{r iris-num, fig.height = 6}
+ggplot(iris, aes(x = Sepal.Length)) + geom_density()
+```
+
+*** =right
+
+```{r iris-cat, fig.height = 6}
+(mutate(iris, Sepal.Length = cut(Sepal.Length, 10)) %>%
+  ggplot(aes(x = Sepal.Length))) + geom_bar() + thm + las2
+```
 
 --- &vcenter .largecontent
 
@@ -162,57 +279,402 @@ head(ubike) %>%
 
 --- .segue .dark
 
-## 觀察數據的工具
+## 觀察數據的方法
 
 --- &vcenter .largecontent
 
-## 呈現單一欄位的資料
+## 觀察單一欄位的資料
 
 - 數值型變數
 - 類別型變數
 
 --- &vcenter .largecontent
 
-## 類別型變數
+## 類別型變數 - 各類別的值與分佈
 
-- 各類別的分佈
-
-```{r}
-table(ubike$day)
-table(ubike$sarea)
-table(ubike$sno)
+```{r level-ubike-tbl, echo = FALSE, dependson="loadubike", results='asis'}
+ubike.sna <- group_by(ubike, sna) %>% summarise(sarea = paste(unique(sarea), collapse=","))
+stopifnot(mutate(ubike.sna, sarea.count = length(strsplit(sarea, ",")[[1]])) %>% filter(sarea.count > 1) %>% nrow == 0)
+ubike.sarea.count <- table(ubike.sna$sarea) %>% as.data.frame %>% set_colnames(c("sarea", "count"))
+cbind(
+  ubike.sarea.count %>% `[`(1:5,) ,
+  ubike.sarea.count %>% `[`(6:10,) ,
+  ubike.sarea.count %>% `[`(11:15,) ,
+  ubike.sarea.count %>% `[`(16:20,) ) %>% 
+  xtable %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
 ```
 
 --- &vcenter .largecontent
 
-## 呈現單一欄位的資料 - 數值型變數
+## 類別型變數 - 各類別的值與分佈
 
-- 拓撲性質
-- 中心位置
-- 分散程度
+```{r level-ubike-pie, echo = FALSE, dependson="level-ubike-tbl", results='asis', warning=FALSE, fig.width = 14}
+ggplot(ubike.sarea.count, aes(x = sarea, y = count, fill = sarea)) +
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
 
 --- &vcenter .largecontent
 
-## 呈現單一欄位的資料 - 拓撲性質
+## 單一欄位的資料 - 數值型變數
+
+- 數值分佈
+- 中心位置
+- 分散程度
+
+--- &twocol .largecontent
+
+## 單一欄位的資料 - 數值分佈
 
 - 單峰或雙峰
 - 左偏或右偏
 
---- &vcenter .largecontent
+*** =left
 
-## 呈現單一欄位的資料 - 中心位置
+```{r binomode, fig.height = 5}
+data.frame(x = c(rnorm(100, 0, 1), rnorm(100, 4, 1))) %>% ggplot(aes(x = x)) +
+  geom_density() + thm
+```
+
+*** =right
+
+```{r skewness, fig.height = 5}
+data.frame(x = c(rexp(100))) %>% ggplot(aes(x = x)) +
+  geom_density()
+```
+
+--- &twocol .largecontent
+
+## 單一欄位的資料 - 中心位置
+
+*** =left
 
 - 平均數：$min \sum{(x_i - m)^2}$
-    - 計算上較簡單
-    - 容易受到偏離值的影響
 - 中位數：$min \sum{\left|x_i - m\right|}$
-    - 不容易受到偏離值的影響
-    - 計算上較為複雜
+- 眾數
+
+*** =right
+
+```{r center, fig.height=7, warning=FALSE}
+par.default <- par()
+par(mar = c(8, 0.1, 0.1, 0.1), oma = c(0.1, 0.1, 0.1, 0.1))
+plot(g <- density(.x <- exp(rnorm(1000, 0, 0.6))), main = "", xlab = "", ylab = "", xaxt = "n", yaxt = "n",
+     xlim = c(0, 2 * mean(.x)), cex = 2)
+f <- approxfun(g$x, g$y)
+lines(rep(g$x[which.max(g$y)], 2), c(0, max(g$y)))
+lines(rep(median(.x), 2), c(0, f(median(.x))))
+lines(rep(mean(.x), 2), c(0, f(mean(.x))))
+axis(side = 1, at = c(g$x[which.max(g$y)], median(.x), mean(.x)), labels = c("眾數", "中位數", "平均數"), las = 2, cex.axis = 2)
+par(par.default)
+```
 
 --- &vcenter .largecontent
 
-## 呈現單一欄位的資料 - 分散程度
+## [101年中華民國家庭收支統計](http://win.dgbas.gov.tw/fies/doc/result/101.pdf)
 
-- 標準差
+- 每戶可支配所得
+    - 平均為92.4萬元
+    - 中位數為80.8萬元
 
 --- &vcenter .largecontent
+
+## [美國新進律師薪水分佈](http://www.nalp.org/uploads/0812Research.pdf)
+
+`r fig2("lawyer_salary.png", 150)`
+
+--- &twocol .largecontent
+
+## 信義區與大安區住宅價格比較
+
+*** =left
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+```{r house_tbl, results='asis'}
+data.frame(房價 = c("25%", "50%", "平均", "75%"),
+           信義區 = c(12.5, 18.0, 25.2, 25.6),
+           大安區 = c(14.8, 23.4, 31.5, 37.4)) %>%
+  xtable %>% print.xtable(rotate.rownames = FALSE, type = "html")
+```
+
+*** =right
+
+<br/>
+<br/>
+`r fig("house_distribution.png")`
+
+--- &twocol .largecontent
+
+## 單一欄位的資料 - 分散程度
+
+*** =left
+
+- 標準差 -- 平均數的最小化目標
+- 離差 -- 中位數的最小化目標
+- 四分位差
+- 變異係數
+
+*** =right
+
+```{r center2, dependson="center"}
+data.frame(x = .x) %>% ggplot(aes(x = "", y = x)) +
+  geom_boxplot()
+```
+
+--- &vcenter .largecontent
+
+## 觀察兩個欄位的資料 - 相關性
+
+- 有因果關係一定有相關性
+- 相關性不一定代表有因果關係
+
+--- &vcenter .largecontent
+
+## 車速和煞車的關係
+
+```{r cars2}
+cars %>% ggplot(aes(x = speed, y = dist)) +
+  geom_point() +
+  geom_smooth(method = "lm", sd = TRUE)
+```
+
+```{r cc, results='asis'}
+for(i in 1:6) cat(sprintf("--- &vcenter .largecontent
+
+## [相關性還是因果關係？](http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html)
+
+%s
+
+", sprintf("<img src='assets/img/cc%d.png' style='width:%d%%;'/>", i, 150)))
+```
+
+--- &vcenter .largecontent
+
+## 預測和相關性
+
+- 只有單一數據時，基本的預測方式：
+    - 類別型變數：猜出現最多次的類別（眾數）
+    - 數值型變數：猜中心點
+```{r ubike-temp, dependson="loadubike", results="asis"}
+avg.temp <- filter(ubike, grepl("2015-01", date)) %>% select(temp) %>% summarise(mean(temp)) %>% `[[`(1)
+cat(sprintf("- 只用一月份的平均氣溫猜測二月份的氣溫，平均誤差的平方為：%f\n", mean((filter(ubike, grepl("2015-02", date)) %>% select(temp) - avg.temp)^2)))
+f.hour <- local({
+  tmp <- filter(ubike, grepl("2015-01", date)) %>% group_by(hour) %>% summarise(avg.temp = mean(temp))
+  approxfun(tmp$hour, tmp$avg.temp)
+})
+cat(sprintf("- 考慮每小時氣溫的變化之後，平均誤差的平方變成：%f\n", mean((filter(ubike, grepl("2015-02", date)) %>% select(hour, temp) %>% mutate(pred = f.hour(hour)) %>% mutate(err = temp - pred) %>% `[[`("err"))^2)))
+```
+
+--- &vcenter .largecontent
+
+## 觀察兩個欄位的資料 - 類別 vs 類別
+
+### 列聯表
+
+<br/>
+
+```{r titanic, echo = FALSE, dependson="loadubike", results='asis'}
+data.frame(Survived = c("No", "Yes"), Count = ftable(Survived ~ 1, Titanic)[1:2]) %>%
+  xtable(digits = 0) %>% print.xtable(type = "html", include.rownames = FALSE)
+
+cat("<br/>\n")
+ftable(Sex ~ Survived, data = Titanic) %>%
+  pander(style = "rmarkdown")
+
+```
+
+--- &twocol .largecontent
+
+## 觀察兩個欄位的資料 - 類別 vs 數值
+
+*** =left
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+```{r house_tbl2, results='asis'}
+data.frame(房價 = c("25%", "50%", "平均", "75%"),
+           信義區 = c(12.5, 18.0, 25.2, 25.6),
+           大安區 = c(14.8, 23.4, 31.5, 37.4)) %>%
+  xtable %>% print.xtable(rotate.rownames = FALSE, type = "html")
+```
+
+*** =right
+
+<br/>
+<br/>
+`r fig("house_distribution.png")`
+
+--- &vcenter .largecontent
+
+## 觀察兩個欄位的資料 - 類別 vs 數值
+
+### BoxPlot
+
+```{r ubike-temp-hour, dependson="loadubike", results="asis", fig.height=6}
+filter(ubike, grepl("2015-02", date)) %>% mutate(hour = factor(hour, levels = 0:23)) %>%
+  select(hour, temp) %>% as.data.frame %>% ggplot(aes(x = hour, y = temp)) + 
+  geom_boxplot() + thm
+```
+
+--- &twocol .largecontent
+
+## 觀察兩個欄位的資料 - 數值 vs 數值
+
+### 相關係數
+
+*** =left
+
+```{r cor1, fig.height=6, cache = FALSE}
+data.frame(x = .x <- rnorm(100), y = .y <- rnorm(100)) %>% ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  thm
+```
+
+相關係數：`r cor(.x, .y)`
+
+*** =right
+
+```{r cor2, fig.height=6, dependson="cor1"}
+data.frame(x = .x, y = 3 * .x + .y) %>% ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  thm
+```
+
+相關係數：`r cor(.x, 3 * .x + .y)`
+
+--- &twocol .largecontent
+
+## 觀察兩個欄位的資料 - 數值 vs 數值
+
+### X-Y散佈圖
+
+*** =left
+
+```{r xy, fig.height = 6}
+cars %>% ggplot(aes(x = speed, y = dist)) +
+  geom_point() + thm
+```
+
+*** =right
+
+<br/>
+`r fig("cc1.png")`
+
+--- &twocol .largecontent
+
+## 總結
+
+### 單一數據
+
+*** =left
+
+- 類別型數據
+    - 類別分佈
+        - 表格
+        - barplot
+
+*** =right
+
+- 數值型數據
+    - 數值分佈
+        - density
+        - Boxplot
+    - 中心位置
+    - 分散程度
+
+--- &twocol .largecontent
+
+## 總結
+
+### 雙數據 - 檢視相關性 
+
+*** =left
+
+- 類別 vs 類別
+    - 列聯表
+- 類別 vs 數值
+    - 條件分佈
+    - 條件Boxplot
+
+*** =right
+
+- 數值 vs 數值
+    - 相關係數
+    - X-Y 散部圖
+    - 時間變化圖
+
+--- .dark .segue
+
+## 觀察數據的工具：R
+
+--- &vcenter
+
+## R 來自世界上最專業的統計學家
+
+<center>`r fit100('statician_10521919-655x280.jpg')`</center>
+
+圖片來源： <http://myfootpath.com/careers/engineering-careers/statistician-careers/>
+
+---
+
+## R 可以輸出高品質的視覺化
+
+`r fig("flights_sml.jpg", 100)`
+
+取自<http://www.r-bloggers.com/mapping-the-worlds-biggest-airlines/>
+
+--- &vcenter
+
+## R 有驚人彈性和潛力
+
+<center>`r fig("fig_10_cran1.png", 75)`</center>
+
+取自 <http://r4stats.com/2013/03/19/r-2012-growth-exceeds-sas-all-time-total/>
+
+--- &vcenter
+
+## R 很容易和其他工具整合
+
+<center>
+```{r r-integration, warning=FALSE}
+tools <- strsplit("Rcpp,rJava,rpy2,RHadoop,RMySQL,RPostgreSQL,RJDBC,RODBC,ROpenOffice,rredis,rmongodb,RSelenium", ",")[[1]]
+freq <- rep(1, length(tools))
+pal <- brewer.pal(length(tools),"BuGn")
+wordcloud(tools, freq, random.color = TRUE, colors = pal)
+```
+</center>
+
+--- &vcenter
+
+## R 很容易擴充和客製化
+
+<center>`r fig("t134_3ca_lg.jpg", 100)`</center>
+來源：<http://img.diynetwork.com/DIY/2003/09/18/t134_3ca_med.jpg>
+
+--- &vcenter .largecontent
+
+## 今天的目標
+
+### 環境設定
+
+- 建立可以使用R 的環境
+- 了解R 的使用界面
+
+--- &vcenter .largecontent
+
+## 安裝 R 與 Rstudio
+
+### 請參考現場示範
+
+--- &vcenter .largecontent
+
+## Q&A
+

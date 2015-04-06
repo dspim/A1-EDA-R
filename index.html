@@ -47,7 +47,7 @@
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;' class='centered'>
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
   <h3>Wush Wu</h3>
 
 <ul>
@@ -89,10 +89,9 @@
 </hgroup>
 <article class = 'flexbox vcenter'>
 <ul>
-<li>EDA的目的</li>
+<li>EDA 的目的</li>
 <li>如何掌握資料的脈絡</li>
-<li>常用圖表</li>
-<li>資料集範例</li>
+<li>觀察數據的方法</li>
 </ul>
 
 </article>
@@ -113,57 +112,107 @@
 </hgroup>
 <article class = 'flexbox vcenter'>
 <ul>
+<li>檢查資料的正確性</li>
 <li>尋找現象中可能的因果關係</li>
 <li>確認進階分析中的假設是否合理</li>
 <li>選擇正確的分析工具和技術</li>
 <li>建議未來的數據收集方向</li>
-<li>檢查資料的正確性</li>
 </ul>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-6" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  <h2>檢查資料的正確性</h2>
-</hgroup>
-<article class = 'flexbox vcenter'>
+<slide class="largecontent" id="slide-6" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>檢查資料的正確性</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>錯誤的資料很常見
 
-</article>
-<!-- Presenter Notes -->
+<ul>
+<li>輸入錯誤</li>
+<li>處理的程式錯誤</li>
+<li>對資料的值解釋錯誤</li>
+</ul></li>
+</ul>
+
+<p><img src='assets/img/johnson_haha.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src='assets/img/incorrect_temperature.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-7" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  <h2>尋找現象中可能的因果關係</h2>
-</hgroup>
-<article class = 'flexbox vcenter'>
+<slide class="largecontent" id="slide-7" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>尋找數據中潛在的因果關係</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>因果關係不容易發現</li>
+<li>需要對問題本質的理解，加上數據的佐證</li>
+</ul>
 
-</article>
-<!-- Presenter Notes -->
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/ubike-hour-temp.png" alt="plot of chunk ubike-hour-temp"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-8" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  <h2>確認進階分析中的假設是否合理</h2>
-</hgroup>
-<article class = 'flexbox vcenter'>
+<slide class="largecontent" id="slide-8" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>確認進階分析中的假設是否合理</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>可以用常態分佈來描述這個數據嗎？</li>
+</ul>
 
-</article>
-<!-- Presenter Notes -->
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/ubike-hour-temp-density.png" alt="plot of chunk ubike-hour-temp-density"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-9" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  <h2>選擇正確的分析工具和技術</h2>
-</hgroup>
-<article class = 'flexbox vcenter'>
+<slide class="largecontent" id="slide-9" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>選擇正確的分析工具和技術</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>是線性關係，還是非線性關係呢？</li>
+</ul>
 
-</article>
-<!-- Presenter Notes -->
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/cars1.png" alt="plot of chunk cars1"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
 </slide>
 <slide class="largecontent" id="slide-10" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>建議未來的數據收集方向</h2>
+  <h2>建議未來的數據收集方向和分析方向</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
+<p><img src="assets/fig/future.png" alt="plot of chunk future"> </p>
 
 </article>
 <!-- Presenter Notes -->
@@ -179,7 +228,7 @@
 </slide>
 <slide class="largecontent" id="slide-12" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  
+  <h2>如何掌握資料的脈絡</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
 <ul>
@@ -210,19 +259,19 @@
 <article class = 'flexbox vcenter'>
 <h3>Ubike</h3>
 
-<!-- html table generated in R 3.1.2 by xtable 1.7-3 package -->
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
 
-<!-- Sun Apr  5 21:32:01 2015 -->
+<!-- Tue Apr  7 02:11:39 2015 -->
 
-<TABLE border=1>
-<TR> <TH> day </TH> <TH> hour </TH> <TH> sarea </TH> <TH> sna </TH> <TH> lat </TH> <TH> tot </TH>  </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 信義區 </TD> <TD> 捷運市政府站(3號出口) </TD> <TD> 25.040858 </TD> <TD> 180 </TD> </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 大安區 </TD> <TD> 捷運國父紀念館站(2號出口) </TD> <TD> 25.041 </TD> <TD> 48 </TD> </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 信義區 </TD> <TD> 台北市政府 </TD> <TD> 25.037797 </TD> <TD> 40 </TD> </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 信義區 </TD> <TD> 市民廣場 </TD> <TD> 25.036036 </TD> <TD> 60 </TD> </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 信義區 </TD> <TD> 興雅國中 </TD> <TD> 25.036564 </TD> <TD> 60 </TD> </TR>
-  <TR> <TD> 2014-12-08 </TD> <TD> 15 </TD> <TD> 信義區 </TD> <TD> 世貿二館 </TD> <TD> 25.034736 </TD> <TD> 80 </TD> </TR>
-   </TABLE>
+<table border=1>
+<tr> <th> date </th> <th> hour </th> <th> sarea </th> <th> sna </th> <th> lat </th> <th> lng </th>  </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 信義區 </td> <td> 捷運市政府站(3號出口) </td> <td align="right"> 25.04 </td> <td align="right"> 121.57 </td> </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 大安區 </td> <td> 捷運國父紀念館站(2號出口) </td> <td align="right"> 25.04 </td> <td align="right"> 121.56 </td> </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 信義區 </td> <td> 台北市政府 </td> <td align="right"> 25.04 </td> <td align="right"> 121.57 </td> </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 信義區 </td> <td> 市民廣場 </td> <td align="right"> 25.04 </td> <td align="right"> 121.56 </td> </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 信義區 </td> <td> 興雅國中 </td> <td align="right"> 25.04 </td> <td align="right"> 121.57 </td> </tr>
+  <tr> <td> 2014-12-08 </td> <td align="right">  15 </td> <td> 信義區 </td> <td> 世貿二館 </td> <td align="right"> 25.03 </td> <td align="right"> 121.57 </td> </tr>
+   </table>
 
 </article>
 <!-- Presenter Notes -->
@@ -246,6 +295,19 @@
   <h2>了解資料的欄位與對應的類型 - 數值型變數</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
+<ul>
+<li>一定是以數字表示</li>
+<li>可以做加法和減法的運算</li>
+<li>一定擁有相對的大小關係</li>
+<li>範例
+
+<ul>
+<li>氣溫</li>
+<li>時間</li>
+<li>價格</li>
+<li>數量</li>
+</ul></li>
+</ul>
 
 </article>
 <!-- Presenter Notes -->
@@ -255,13 +317,697 @@
   <h2>了解資料的欄位與對應的類型 - 類別型變數</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
+<ul>
+<li>可能是以數字表示</li>
+<li>不能做加法和減法的運算</li>
+<li>不一定擁有相對的大小關係</li>
+<li>範例
+
+<ul>
+<li>日期、月份</li>
+<li>性別</li>
+<li>數值區間，如年齡區間</li>
+</ul></li>
+</ul>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-18" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-18" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>了解資料的欄位與對應的類型 - 標籤型變數</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>通常是類別型或數值型變數的壓縮</li>
+<li>已經被定義在某些資料庫系統之中</li>
+<li>轉換為對應的類別型變數與數值型變數</li>
+<li>範例
+
+<ul>
+<li>文章分類標籤</li>
+<li>臉書標籤</li>
+</ul></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src='assets/img/facebookhashtag.png' style='max-width: 100%;max-height: 100%'></img>
+出處: <a href="http://www.techbang.com/posts/13673-import-facebook-official-hashtag-label-features-marked-with-a-keywords">http://www.techbang.com/posts/13673-import-facebook-official-hashtag-label-features-marked-with-a-keywords</a></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-19" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>數值型變數可以轉換為類別型變數</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><a href="http://en.wikipedia.org/wiki/Data_binning">Data Binning</a></li>
+</ul>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><img src="assets/fig/iris-num.png" alt="plot of chunk iris-num"> </p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/iris-cat.png" alt="plot of chunk iris-cat"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-20" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>了解資料的欄位與對應的類型 - 標籤型變數</h2>
+  <h2>檢查和整理資料</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>檢查資料是否正確</li>
+<li>檢查資料內容和物理意義的一致性</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-21" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>觀察數據的方法</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-22" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>觀察單一欄位的資料</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>數值型變數</li>
+<li>類別型變數</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-23" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>類別型變數 - 各類別的值與分佈</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Tue Apr  7 02:11:39 2015 -->
+
+<table border=1>
+  <tr> <td> 三重區 </td> <td align="right">  16 </td> <td> 內湖區 </td> <td align="right">  15 </td> <td> 大安區 </td> <td align="right">  30 </td> <td> 板橋區 </td> <td align="right">   4 </td> </tr>
+  <tr> <td> 中和區 </td> <td align="right">   4 </td> <td> 北投區 </td> <td align="right">  12 </td> <td> 文山區 </td> <td align="right">  12 </td> <td> 永和區 </td> <td align="right">  10 </td> </tr>
+  <tr> <td> 中山區 </td> <td align="right">  20 </td> <td> 南港區 </td> <td align="right">  13 </td> <td> 新店區 </td> <td align="right">  15 </td> <td> 汐止區 </td> <td align="right">  18 </td> </tr>
+  <tr> <td> 中正區 </td> <td align="right">  20 </td> <td> 士林區 </td> <td align="right">  14 </td> <td> 新莊區 </td> <td align="right">  13 </td> <td> 萬華區 </td> <td align="right">  12 </td> </tr>
+  <tr> <td> 信義區 </td> <td align="right">  23 </td> <td> 大同區 </td> <td align="right">  11 </td> <td> 松山區 </td> <td align="right">  15 </td> <td> 蘆洲區 </td> <td align="right">   7 </td> </tr>
+   </table>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-24" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>類別型變數 - 各類別的值與分佈</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src="assets/fig/level-ubike-pie.png" alt="plot of chunk level-ubike-pie"> </p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-25" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>單一欄位的資料 - 數值型變數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>數值分佈</li>
+<li>中心位置</li>
+<li>分散程度</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-26" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>單一欄位的資料 - 數值分佈</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>單峰或雙峰</li>
+<li>左偏或右偏</li>
+</ul>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><img src="assets/fig/binomode.png" alt="plot of chunk binomode"> </p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/skewness.png" alt="plot of chunk skewness"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-27" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>單一欄位的資料 - 中心位置</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>平均數：\(min \sum{(x_i - m)^2}\)</li>
+<li>中位數：\(min \sum{\left|x_i - m\right|}\)</li>
+<li>眾數</li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/center.png" alt="plot of chunk center"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-28" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://win.dgbas.gov.tw/fies/doc/result/101.pdf">101年中華民國家庭收支統計</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>每戶可支配所得
+
+<ul>
+<li>平均為92.4萬元</li>
+<li>中位數為80.8萬元</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-29" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.nalp.org/uploads/0812Research.pdf">美國新進律師薪水分佈</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/lawyer_salary.png' style='width: 150%'></img></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-30" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>信義區與大安區住宅價格比較</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><br/>
+<br/>
+<br/>
+<br/></p>
+
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Tue Apr  7 02:11:40 2015 -->
+
+<table border=1>
+<tr> <th>  </th> <th> 房價 </th> <th> 信義區 </th> <th> 大安區 </th>  </tr>
+  <tr> <td align="right"> 1 </td> <td> 25% </td> <td align="right"> 12.50 </td> <td align="right"> 14.80 </td> </tr>
+  <tr> <td align="right"> 2 </td> <td> 50% </td> <td align="right"> 18.00 </td> <td align="right"> 23.40 </td> </tr>
+  <tr> <td align="right"> 3 </td> <td> 平均 </td> <td align="right"> 25.20 </td> <td align="right"> 31.50 </td> </tr>
+  <tr> <td align="right"> 4 </td> <td> 75% </td> <td align="right"> 25.60 </td> <td align="right"> 37.40 </td> </tr>
+   </table>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><br/>
+<br/>
+<img src='assets/img/house_distribution.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-31" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>單一欄位的資料 - 分散程度</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>標準差 -- 平均數的最小化目標</li>
+<li>離差 -- 中位數的最小化目標</li>
+<li>四分位差</li>
+<li>變異係數</li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/center2.png" alt="plot of chunk center2"> </p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-32" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>觀察兩個欄位的資料 - 相關性</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>有因果關係一定有相關性</li>
+<li>相關性不一定代表有因果關係</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-33" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>車速和煞車的關係</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src="assets/fig/cars2.png" alt="plot of chunk cars2"> </p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-34" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc1.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-35" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc2.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-36" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc3.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-37" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc4.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-38" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc5.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-39" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/cc6.png' style='width:150%;'/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-40" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>預測和相關性</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>只有單一數據時，基本的預測方式：
+
+<ul>
+<li>類別型變數：猜出現最多次的類別（眾數）</li>
+<li>數值型變數：猜中心點</li>
+</ul></li>
+<li>只用一月份的平均氣溫猜測二月份的氣溫，平均誤差的平方為：11.667782</li>
+<li>考慮每小時氣溫的變化之後，平均誤差的平方變成：9.736795</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-41" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>觀察兩個欄位的資料 - 類別 vs 類別</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>列聯表</h3>
+
+<p><br/></p>
+
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Tue Apr  7 02:36:12 2015 -->
+
+<table border=1>
+<tr> <th> Survived </th> <th> Count </th>  </tr>
+  <tr> <td> No </td> <td align="right"> 1490 </td> </tr>
+  <tr> <td> Yes </td> <td align="right"> 711 </td> </tr>
+   </table>
+
+<p><br/></p>
+
+<table><thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="center"></td>
+<td align="center">&quot;Sex&quot;</td>
+<td align="center">&quot;Male&quot;</td>
+<td align="center">&quot;Female&quot;</td>
+</tr>
+<tr>
+<td align="center">&quot;Survived&quot;</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">&quot;No&quot;</td>
+<td align="center"></td>
+<td align="center">1364</td>
+<td align="center">126</td>
+</tr>
+<tr>
+<td align="center">&quot;Yes&quot;</td>
+<td align="center"></td>
+<td align="center">367</td>
+<td align="center">344</td>
+</tr>
+</tbody></table>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-42" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>觀察兩個欄位的資料 - 類別 vs 數值</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><br/>
+<br/>
+<br/>
+<br/></p>
+
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Tue Apr  7 02:50:45 2015 -->
+
+<table border=1>
+<tr> <th>  </th> <th> 房價 </th> <th> 信義區 </th> <th> 大安區 </th>  </tr>
+  <tr> <td align="right"> 1 </td> <td> 25% </td> <td align="right"> 12.50 </td> <td align="right"> 14.80 </td> </tr>
+  <tr> <td align="right"> 2 </td> <td> 50% </td> <td align="right"> 18.00 </td> <td align="right"> 23.40 </td> </tr>
+  <tr> <td align="right"> 3 </td> <td> 平均 </td> <td align="right"> 25.20 </td> <td align="right"> 31.50 </td> </tr>
+  <tr> <td align="right"> 4 </td> <td> 75% </td> <td align="right"> 25.60 </td> <td align="right"> 37.40 </td> </tr>
+   </table>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><br/>
+<br/>
+<img src='assets/img/house_distribution.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-43" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>觀察兩個欄位的資料 - 類別 vs 數值</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>BoxPlot</h3>
+
+<p><img src="assets/fig/ubike-temp-hour.png" alt="plot of chunk ubike-temp-hour"> </p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-44" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>觀察兩個欄位的資料 - 數值 vs 數值</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>相關係數</h3>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><img src="assets/fig/cor1.png" alt="plot of chunk cor1"> </p>
+
+<p>相關係數：-0.0523</p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src="assets/fig/cor2.png" alt="plot of chunk cor2"> </p>
+
+<p>相關係數：0.9466</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-45" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>觀察兩個欄位的資料 - 數值 vs 數值</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>X-Y散佈圖</h3>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><img src="assets/fig/xy.png" alt="plot of chunk xy"> </p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><br/>
+<img src='assets/img/cc1.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-46" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>總結</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>單一數據</h3>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>類別型數據
+
+<ul>
+<li>類別分佈
+
+<ul>
+<li>表格</li>
+<li>barplot</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <ul>
+<li>數值型數據
+
+<ul>
+<li>數值分佈
+
+<ul>
+<li>density</li>
+<li>Boxplot</li>
+</ul></li>
+<li>中心位置</li>
+<li>分散程度</li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-47" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>總結</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>雙數據 - 檢視相關性</h3>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li>類別 vs 類別
+
+<ul>
+<li>列聯表</li>
+</ul></li>
+<li>類別 vs 數值
+
+<ul>
+<li>條件分佈</li>
+<li>條件Boxplot</li>
+</ul></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <ul>
+<li>數值 vs 數值
+
+<ul>
+<li>相關係數</li>
+<li>X-Y 散部圖</li>
+<li>時間變化圖</li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="dark segue" id="slide-48" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>觀察數據的工具：R</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-49" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 來自世界上最專業的統計學家</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><center><img src='assets/img/statician_10521919-655x280.jpg' style='max-width: 100%;max-height: 100%'></img></center></p>
+
+<p>圖片來源： <a href="http://myfootpath.com/careers/engineering-careers/statistician-careers/">http://myfootpath.com/careers/engineering-careers/statistician-careers/</a></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-50" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>R 可以輸出高品質的視覺化</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src='assets/img/flights_sml.jpg' style='max-width: 100%;max-height: 100%'></img></p>
+
+<p>取自<a href="http://www.r-bloggers.com/mapping-the-worlds-biggest-airlines/">http://www.r-bloggers.com/mapping-the-worlds-biggest-airlines/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-51" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 有驚人彈性和潛力</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><center><img src='assets/img/fig_10_cran1.png' style='max-width: 75%;max-height: 75%'></img></center></p>
+
+<p>取自 <a href="http://r4stats.com/2013/03/19/r-2012-growth-exceeds-sas-all-time-total/">http://r4stats.com/2013/03/19/r-2012-growth-exceeds-sas-all-time-total/</a></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-52" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 很容易和其他工具整合</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><center>
+<img src="assets/fig/r-integration.png" alt="plot of chunk r-integration"> 
+</center></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-53" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 很容易擴充和客製化</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><center><img src='assets/img/t134_3ca_lg.jpg' style='max-width: 100%;max-height: 100%'></img></center>
+來源：<a href="http://img.diynetwork.com/DIY/2003/09/18/t134_3ca_med.jpg">http://img.diynetwork.com/DIY/2003/09/18/t134_3ca_med.jpg</a></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-54" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>今天的目標</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>環境設定</h3>
+
+<ul>
+<li>建立可以使用R 的環境</li>
+<li>了解R 的使用界面</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-55" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>安裝 R 與 Rstudio</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>請參考現場示範</h3>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-56" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>Q&amp;A</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
 
@@ -310,7 +1056,7 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='尋找現象中可能的因果關係'>
+        data-slide=7 title='尋找數據中潛在的因果關係'>
          7
       </a>
     </li>
@@ -328,7 +1074,7 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='建議未來的數據收集方向'>
+        data-slide=10 title='建議未來的數據收集方向和分析方向'>
          10
       </a>
     </li>
@@ -340,7 +1086,7 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title=''>
+        data-slide=12 title='如何掌握資料的脈絡'>
          12
       </a>
     </li>
@@ -378,6 +1124,234 @@
       <a href="#" target="_self" rel='tooltip' 
         data-slide=18 title='了解資料的欄位與對應的類型 - 標籤型變數'>
          18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='數值型變數可以轉換為類別型變數'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='檢查和整理資料'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='觀察數據的方法'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='觀察單一欄位的資料'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='類別型變數 - 各類別的值與分佈'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='類別型變數 - 各類別的值與分佈'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='單一欄位的資料 - 數值型變數'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='單一欄位的資料 - 數值分佈'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='單一欄位的資料 - 中心位置'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='<a href="http://win.dgbas.gov.tw/fies/doc/result/101.pdf">101年中華民國家庭收支統計</a>'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='<a href="http://www.nalp.org/uploads/0812Research.pdf">美國新進律師薪水分佈</a>'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='信義區與大安區住宅價格比較'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='單一欄位的資料 - 分散程度'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='觀察兩個欄位的資料 - 相關性'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='車速和煞車的關係'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='<a href="http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html">相關性還是因果關係？</a>'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='預測和相關性'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='觀察兩個欄位的資料 - 類別 vs 類別'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='觀察兩個欄位的資料 - 類別 vs 數值'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='觀察兩個欄位的資料 - 類別 vs 數值'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='觀察兩個欄位的資料 - 數值 vs 數值'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='觀察兩個欄位的資料 - 數值 vs 數值'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='總結'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='總結'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='觀察數據的工具：R'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='R 來自世界上最專業的統計學家'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='R 可以輸出高品質的視覺化'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='R 有驚人彈性和潛力'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='R 很容易和其他工具整合'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='R 很容易擴充和客製化'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='今天的目標'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='安裝 R 與 Rstudio'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Q&amp;A'>
+         56
       </a>
     </li>
   </ul>
