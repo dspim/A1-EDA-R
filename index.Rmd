@@ -123,12 +123,12 @@ sys_encode <- c("UTF-8", "UTF-8", "BIG-5")[pmatch(sys_name, c("linux", "darwin",
 if (!file.exists(ubike_path <- sprintf("data/ubike-DT-%s.rds", sys_encode))) {
   stop("TODO: implement downloading ubike")
 }
-ubike <- readRDS(ubike_path)
+ubike <- readRDS(ubike_path) %>%
+  `[`(c(1, 2, 4, 5, 6, 7))
 ```
 
 ```{r eda-ubike, echo = FALSE, dependson="loadubike", results='asis'}
 head(ubike) %>%
-  `[`(c(1, 2, 4, 5, 6, 7)) %>%
   xtable %>%
   print.xtable(type = "html", include.rownames = FALSE)
 ```
@@ -176,7 +176,12 @@ head(ubike) %>%
 ## 類別型變數
 
 - 各類別的分佈
-    - 類別的出現是否集中
+
+```{r}
+table(ubike$day)
+table(ubike$sarea)
+table(ubike$sno)
+```
 
 --- &vcenter .largecontent
 
@@ -198,4 +203,16 @@ head(ubike) %>%
 ## 呈現單一欄位的資料 - 中心位置
 
 - 平均數：$min \sum{(x_i - m)^2}$
+    - 計算上較簡單
+    - 容易受到偏離值的影響
 - 中位數：$min \sum{\left|x_i - m\right|}$
+    - 不容易受到偏離值的影響
+    - 計算上較為複雜
+
+--- &vcenter .largecontent
+
+## 呈現單一欄位的資料 - 分散程度
+
+- 標準差
+
+--- &vcenter .largecontent
