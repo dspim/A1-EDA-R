@@ -1,5 +1,5 @@
 ---
-title       : Exploratory Data Analysis with R
+title       : Exploratory Data Analysis
 subtitle    : 智庫驅動
 author      : Wush Wu
 job         : 
@@ -23,7 +23,7 @@ library(quantmod)
 library(pander)
 library(wordcloud)
 library(RColorBrewer)
-opts_chunk$set(echo = FALSE, cache=TRUE)
+opts_chunk$set(echo = FALSE, cache=TRUE, cache.path = ".cache-EDA/")
 fit100 <- fig <- function(path, size = 100) {
   sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
           path, size, size)

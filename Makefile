@@ -5,5 +5,5 @@ all : EDA.html EDA-R.html
 	Rscript -e "library(slidify);slidify('$<')"
 
 clean :
-	-rm .cache/*
+	-rm -rf .cache-EDA-R .cache-EDA
 	-rm *.html *.md

@@ -1,0 +1,1109 @@
+---
+title       : EDA with R
+subtitle    : 智庫驅動
+author      : Wush Wu
+job         : 
+framework   : io2012-dsp
+highlighter : highlight.js
+hitheme     : zenburn
+widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+--- &twocol
+
+```{r setup, include=FALSE, cache=FALSE}
+suppressPackageStartupMessages({
+  library(knitr)
+  library(wordcloud)
+  library(RColorBrewer)
+  library(ggplot2)
+  library(xtable)
+  library(magrittr)
+})
+opts_chunk$set(echo = FALSE, cache = FALSE, cache.path = ".cache-EDA-R/")
+fit100 <- fig <- function(path, size = 100) {
+  sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
+          path, size, size)
+}
+fit50 <- function(fname) fit100(fname, 50)
+options(width = 40)
+```
+
+```{r loadubike, echo = FALSE, cache=TRUE}
+ubike_path <- sprintf("data/ubikeweather%s.csv", sys_encode)
+ubike <- fread(ubike_path, header = TRUE, showProgress = interactive(), data.table = FALSE)
+# ubike <- readRDS("data/ubike-weather-utf8.rds")
+```
+
+## 關於講師
+
+*** =left
+
+### Wush Wu
+
+- Taiwan R User Group 共同創辦人
+- 以下R 套件的貢獻者:
+    - FeatureHashing
+    - digest
+    - rcppcnpy
+    - knitr
+- 臺大電機所博士生
+
+*** =right
+
+`r fig("wush.jpg")`
+
+--- &vcenter .largecontent
+
+## 今天的目標
+
+### 學習R 語言
+
+- 透過實際的範例學習R 語言
+    - 讀取資料
+    - 選取資料
+    - 敘述統計量
+    - 視覺化
+
+--- .segue .dark
+
+## 工欲善其事，必先利其器
+
+--- &vcenter .largecontent
+
+## Rstudio 界面
+
+- 程式碼編輯區
+- 命令列區
+- 其他資訊區
+- 檔案系統區
+
+--- &vcenter .largecontent
+
+## 熟悉R 和Rstudio的界面
+
+- 了解輸入
+- 了解輸出
+- 中斷程式
+
+--- &vcenter .largecontent
+
+## 熟悉R 和Rstudio的界面 - 請你跟我這樣做
+
+### 命令列區
+
+- 注意最左下腳的符號是`>`
+- 輸入`"hello world"`後按下Enter，檢查螢幕輸出（記得加上引號）
+- 輸入`1 + 1`後按下Enter，檢查螢幕輸出，注意有無引號
+- 輸入`1 + `後按下Enter，檢查螢幕輸出，注意最左下角的開頭變成`+`
+- 按下Ctrl + C或ESC，檢查哪一個按鈕會讓左下角回復成`>`開頭
+
+--- &vcenter .largecontent
+
+## 熟悉R 和Rstudio的界面 - 請你跟我這樣做
+
+### 命令列區
+
+- 在新的一行命令列區輸入`he`之後按下Enter
+- 在新的一行命令列區輸入`he`之後按下tab
+
+--- &vcenter .largecontent
+
+## 熟悉R 和Rstudio的界面 - 請你跟我這樣做
+
+### 程式碼編輯區
+
+- 建立新的R Script檔案
+- 在第一行輸入`he`隻後按下Ctrl + Enter後，觀察命令列區
+- 利用滑鼠點選`he`後的位置，確認游標閃爍的位置在`he`之後，按下tab
+
+--- .segue .dark
+
+## R 的擴充功能
+
+--- 
+
+## [CRAN Task Views](http://cran.r-project.org/web/views/)
+
+`r fig("CRAN-Task-Views.png", 100)`
+
+--- &vcenter .largecontent
+
+## 套件的安裝
+
+### UI
+
+- 請見Demo
+
+### 命令列
+
+```{r, eval = FALSE, echo = TRUE}
+install.views("topic-name")
+install.packages("pkg-name", repos = "來源")
+```
+
+--- &vcenter .largecontent
+
+## 小挑戰
+
+### 套件安裝
+
+- 利用UI安裝`ggplot2`、`magrittr`套件
+
+--- .dark .segue
+
+## 讓我們來說R 語
+
+--- &twocol .largecontent
+
+## 敘述句(expression)
+
+*** =left
+
+```{r, echo = TRUE}
+"1;2;3;"
+1;2;3;
+``` 
+
+*** =right
+
+- 敘述句以`;`或`斷行`(輸入Enter)作結尾
+- R 會把單引號`'`或雙引號`"`所包覆的敘述當成字串
+- 沒有完成的敘述句，命令列的開頭會變成`+`
+- 可以用Ctrl + C 中斷敘述句
+
+--- &vcenter .largecontent
+
+## 註解
+
+- `#`之後的程式碼會被當成註解
+    - R 會完全忽略註解
+    - 註解的功用是增加程式碼的可讀性
+
+```{r comment, echo = TRUE}
+1;2;#3
+```
+
+--- &twocol .largecontent
+
+## 敘述句與數值運算
+
+*** =left
+
+```{r, echo=TRUE}
+1 + 1
+1 + 2 - 1
+(1 + 1) * 2
+2.5e3
+```
+
+*** =right
+
+- 敘述句可以運算出一個R 物件
+- 運算的順序符合先乘除後加減，括號最優先
+- 中間有`e`的數值代表要再乘以10的冪次方
+
+--- &twocol .largecontent
+
+## 變數與賦值 `<-`或`=`
+
+*** =left
+
+```{r, echo = TRUE}
+One
+One <- 1
+One
+Two = "2"
+Two
+```
+
+*** =right
+
+### 賦值
+
+<center>
+`r fig("assign-missing.png", 50)`
+</center>
+
+$$\Downarrow$$
+
+<center>
+`r fig("assign-linking.png", 50)`
+</center>
+
+--- &twocol .largecontent
+
+## 向量
+
+*** =left
+
+```{r, echo=TRUE}
+1:3
+c(1, 2, 3) + 1
+1:3 * 2
+```
+
+*** =right
+
+- 利用`c`和建立向量
+- 利用`:`建立序列
+- 運算是向量式的
+
+<center>`r fig("vectorize-plus-before.png", 50)`</center>
+$$\Downarrow$$
+<center>`r fig("vectorize-plus-after.png", 50)`</center>
+
+--- &vcenter .largecontent
+
+## 呼叫函數
+
+### 請在Rstudio的命令列區進行以下操作
+
+- 輸入`c`，按下tab
+    - 自動完成：列出所有`c`開頭的函數
+    - 列出函數的說明文件
+- 清空命令列，輸入`?c`後按下Enter
+- 清空命令列，輸入`c`後按下Enter
+
+--- &vcenter .largecontent
+
+## 函數與參數
+
+- 函數的參數可以改變函數的行為
+- R 的函數是依照以下方式來解釋參數：
+    - 名稱的partial matching
+    - 順序
+    - `...`
+    - `...`之後的參數
+- 專家區
+    - R 的參數都是使用Pass By Value
+    - 參數的複製是採用Copy on Write
+
+--- &vcenter .largecontent
+
+## 小挑戰
+
+### 請利用`+`、`-`、`*`或`/`來回答：
+
+```{r, echo = TRUE, results = "none"}
+# ubike在捷運市政府站(3號出口)站點於2015-03-01的每小時降雨量
+rainfall1 <- c(0.157,0.432,0.702,0.947,1.129,1.224,1.241,
+  1.218,1.201,1.207,1.225,1.233,1.227,1.218,1.22,1.233,
+  1.244,1.246,1.242,1.242,1.249,1.257,1.258,1.252) 
+# ubike在大鵬華城站點 於2015-03-01的每小時降雨量
+rainfall2 <- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
+  1.102,1.085,1.091,1.108,1.116,1.11,1.102,1.104,1.116,
+  1.127,1.129,1.126,1.125,1.132,1.14,1.141,1.136)
+```
+
+- `rainfall1`每小時的降雨量和`rainfall2`的差距
+
+*** =pnotes
+
+```{r, echo = TRUE, results = "none"}
+rainfall1 - rainfall2
+```
+
+--- .segue .dark
+
+## R 的資料結構
+
+--- &vcenter .largecontent
+
+## 資料的類型
+
+- 數值型變數
+- 類別型變數
+
+--- &vcenter .largecontent
+
+## R 的數值型態：專用於數值型變數
+
+- 數值型態
+    - 整數(integer) `1L`
+    - 實數(numeric) `1.5`
+
+```{r, echo = TRUE}
+99L;99.5
+```
+
+--- &vcenter .largecontent
+
+## R 的特殊數值型態
+
+- 時間
+
+```{r datetime, echo = TRUE}
+Sys.time()
+ISOdatetime(year = 1970, month = 1, day = 1, 
+            hour = 0, min = 0, sec = 0)
+```
+
+--- &vcenter .largecontent
+
+## R 的類別型態
+
+- 字串(character) `"1"`
+- 類別(factor) `factor(1)`
+
+```{r categorical_variable, echo = TRUE}
+c("011", "012");factor(c("信義區","大安區","信義區"))
+```
+
+--- &vcenter .largecontent
+
+## 查詢變數的類別
+
+```{r, echo = TRUE}
+x <- 1:3
+class(x)
+x <- factor(c("1", "2", "3"))
+class(x)
+```
+
+--- &vcenter .largecontent
+
+## 資料型態的轉換 - 將數值轉換為類別
+
+### 直接轉換
+
+```{r as.character, echo = TRUE}
+x <- c(1, 2, 3, 2, 3, 2, 1)
+as.character(x) # 字串
+factor(x) # 類別
+```
+
+--- &vcenter .largecontent
+
+## 資料型態的轉換 - 將數值轉換為類別
+
+### 分級
+
+```{r cut, echo = TRUE}
+x <- c(75, 81, 82, 76, 91, 92)
+cut(x, breaks = c(70, 80, 90, 100))
+```
+
+--- &vcenter .largecontent
+
+## 資料型態的轉換 - 將字串轉換為數值
+
+### 直接轉換
+
+```{r as.numeric, echo = TRUE}
+x <- c("1", "2", "3", "2", "a")
+as.numeric(x)
+```
+
+- `NA`代表Not available，代表著**missing value**
+
+--- &vcenter .largecontent
+
+## 資料型態的轉換 - 資料清理
+
+### 民國80年至82年的國民生產毛額
+
+<pre><code style="text-align: center;">
+百萬元
+5,023,763
+5,614,679
+6,205,338
+</code></pre>
+
+```{r gdp1, echo = TRUE}
+gdp <- c("5,023,763", "5,614,679", "6,205,338")
+as.numeric(gsub(",", "", gdp))
+```
+
+---
+
+## 小挑戰
+
+請問根據以下的輸出，這份ubike的各欄類別為何？
+
+```{r ubike.type, echo = FALSE, results='asis', dependson="loadubike"}
+ubike.type <- sapply(ubike, class)
+split(ubike.type, rep(1:3, each = 7)) %>%
+  lapply(function(x) {
+    tmp <- as.data.frame(x)
+    colnames(tmp) <- "class"
+    tmp$name <- rownames(tmp)
+    tmp
+  }) %>%
+  do.call(what = cbind) %>%
+  set_colnames(rep(c("class", "name"), 3)) %>%
+  xtable %>% print.xtable(type = "html", include.colnames = FALSE)
+```
+
+--- &vcenter .largecontent
+
+## `summary` 指令
+
+```{r summary, echo = TRUE}
+data(power, package = "DSP2014R")
+summary(power)
+```
+
+- 根據資料型態的不同，函數的輸出結果也會不同
+
+
+--- .segue .dark
+
+## 資料的讀取
+
+--- &vcenter .largecontent
+
+## 讀取整理過後的表格檔案
+
+```
+"產業代號（第六版）","產業名稱","年度（民國）","用電量（度）"
+"","農藝及園藝",87,113584956
+"011","農藝及園藝",88,122010866
+"011","農藝及園藝",89,139061996
+"011","農藝及園藝",90,143103985.905191
+```
+
+```{r read.table, echo = TRUE}
+path <- system.file("opendata/power/power.csv", package = "DSP2014R");path
+src <- readLines(con = path, n = 5)
+power <- read.table(file = path, header = TRUE, sep = ",");head(power)
+```
+
+*** =pnotes
+
+- 注意：有些參數是字串，有些參數是數值
+- TRUE/FALSE代表布林值
+
+--- &vcenter .largecontent
+
+## 常見的讀取錯誤
+
+### 路徑錯誤
+
+```{r read.table_wrong_path, echo = TRUE}
+path <- "wrong_path"
+power <- read.table(file = path, header = TRUE, sep = ",")
+```
+
+- 絕對路徑
+    - 確認檔案是否存在
+- 相對路徑
+    - 利用`getwd`了解R 當下的路徑位置
+
+--- &vcenter .largecontent
+
+## 常見的讀取錯誤
+
+### 格式錯誤
+
+```{r read.table_wrong_format, echo = TRUE}
+path <- system.file("opendata/power/power.csv", package = "DSP2014R")
+power <- read.table(file = path, header = TRUE, sep = "1")
+```
+
+- 利用其他編輯器確認分隔符號
+- 確認每列的資料的欄位是正確的
+    - 必要時，請用其他文件編輯器校正欲讀取的檔案
+
+--- &vcenter .largecontent
+
+## 常見的讀取錯誤
+
+### 編碼錯誤
+
+```{r read.table_wrong_encoding, echo = TRUE}
+path <- switch(Sys.info()[["sysname"]], 
+       system.file("opendata/power/power-big5.csv", package = "DSP2014R"))
+power <- read.table(file = path, header = TRUE, sep = ",")
+```
+
+- 查詢檔案的編碼
+    - 常見的中文編碼有`utf-8`和`big5`
+    - 利用其他工具做編碼的轉換(推薦, Windows 上建議安裝[Rtools](http://cran.csie.ntu.edu.tw/bin/windows/))，可使用`iconv`和`file`兩個工具
+    - 讀取時套上`file`函數指定編碼（較不推薦）
+
+*** =pnotes
+
+- `help("switch")`
+    - 根據第一個參數的結果，決定後續的行為
+
+```{r file_encoding, echo = TRUE}
+path <- switch(Sys.info()[["sysname"]], 
+       system.file("opendata/power/power-big5.csv", 
+                   package = "DSP2014R"))
+encoding <- switch(Sys.info()[["sysname"]], 
+       "big5")
+power <- read.table(file = file(path, encoding = encoding), 
+                    header = TRUE, sep = ",")
+```
+
+--- &vcenter .largecontent
+
+## 小練習
+
+### 請問這個錯誤訊息代表哪一種讀取錯誤？
+
+```
+Error: more columns than column names
+```
+
+--- &vcenter .largecontent
+
+## 校正欄位名稱
+
+```{r edit, eval = FALSE, echo = TRUE}
+power2 <- edit(power)
+colnames(power2)
+colnames(power2) <- c("label", "name", "year", "power")
+```
+
+--- &vcenter .largecontent
+
+## 範例
+
+- 自[UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)
+    1. 下載資料
+    1. 讀取資料
+    1. 校正欄位名稱
+
+--- &vcenter .largecontent
+
+## 小練習
+
+### 請自[UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)練習其他資料
+
+--- &vcenter
+
+## 讀取資料庫
+
+### SQLite
+
+```{r dbi, echo = TRUE}
+library(RSQLite)
+path <- system.file("sqlite/example.db", package = "DSP2014R")
+db <- dbConnect("SQLite", path)
+dbListTables(db)
+power <- dbReadTable(db, "power")
+dbDisconnect(db)
+```
+
+--- &vcenter .largecontent
+
+## 小挑戰
+
+### 自範例的資料庫中讀取"gdp"表格
+
+--- &vcenter .largecontent
+
+## 未來的學習清單
+
+### 各式資料庫的連接
+
+- SQL Database: `RMySQL`, `RPostgreSQL`, `ROracle`, `RJDBC`, `RODBC`
+- No SQL Database: `rmongodb`, `rredis`
+- 讀取XML和網頁資料
+    - `XML`套件和XPath
+- 讀取json資料
+    - `RJSONIO`套件
+
+--- .segue .dark
+
+## 資料的選取
+
+--- &vcenter .largecontent
+
+## 布林運算
+
+- `>` `<` `>=` `<=` `==` `!=`
+
+```{r boolean, echo = TRUE}
+1 > 2;1 <= 2
+"A" == "A";"A" != "A"
+```
+
+--- 
+
+## 向量的選取
+
+### 坐標
+
+```{r index, echo = TRUE}
+x <- 1:5; x[2:3]
+```
+
+### 布林
+
+```{r boolean_selection, echo = TRUE}
+x <- 1:5; x > 3; x[x > 3]
+```
+
+--- &vcenter .largecontent
+
+## 多重條件
+
+### 且：`&`
+
+`布林運算結果1 & 布林運算結果1`
+
+### 或：`|`
+
+`布林運算結果1 | 布林運算結果1`
+
+--- &vcenter .largecontent
+
+## 小挑戰
+
+```{r exercise_selection, eval = FALSE, echo = TRUE}
+# 社會服務業自民國87至民國91年的年度用電量（度）
+power1 <- c(6097059332, 6425887925, 6982579022, 7323992602.53436, 7954239517) 
+# 製造業自民國87至民國91年的年度用電量（度）
+power2 <- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372914.6949) 
+```
+
+- 運用index從`power1`中選取第88年和第90年的年度用電量。結果應該為：
+    ```{r exercise_selection_ans1, echo = FALSE}
+    c(6097059332, 6425887925, 6982579022, 7323992602.53436, 7954239517)[c(2,4)]
+    ```
+- 運用布林運算自`power2`中選出，製造業超過社會服務業9.5倍的用電年度的用電量。結果應該為：
+    ```{r exercise_selection_ans2, echo = FALSE}
+    power1 <- c(6097059332, 6425887925, 6982579022, 7323992602.53436, 7954239517) 
+    power2 <- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372914.6949) 
+    power2[power2 / power1 > 9.5]
+    ```
+
+--- &vcenter .largecontent
+
+## 表格的選取
+
+```{r select_table, echo = TRUE}
+data(power, package = "DSP2014R")
+power[1, 2]
+```
+
+`r fig("table_selection.png", 100)`
+
+--- &vcenter .largecontent
+
+## 欄的選取
+
+```{r select_column, echo = TRUE}
+head(power)
+head(power[["name"]]) # head(power$name)
+```
+
+--- &vcenter .largecontent
+
+## 範例
+
+### 選取資訊服務業的歷年用電資料
+
+1. 自`power`選取`name`
+2. 利用布林運算，把1.的結果和`"資訊服務業"`比較
+3. 利用2.的結果選取power的列
+
+```{r select_row_example, echo = TRUE}
+x1 <- power[["name"]] # power$name
+x2 <- x1 == "資訊服務業"
+x3 <- power[x2,]
+head(x3)
+```
+
+---
+
+## 小挑戰
+
+### 請選取「資訊服務業」第89年度的用電量
+
+1. 自`power`選取`name`
+2. 利用布林運算，把1.的結果和`"資訊服務業"`比較
+3. 自`power`選取`year`
+4. 利用布林運算，把3.的結果和89比較
+5. 利用布林運算，取得同時滿足2.和4.的結果（且）
+6. 利用5.的結果選取power的列
+
+*** =pnotes
+
+```{r, echo = TRUE, eval = FALSE}
+x1 <- power[["name"]]
+x2 <- x1 == "資訊服務業"
+x3 <- power[["year"]]
+x4 <- x3 == 89
+x5 <- x2 & x4
+x6 <- power[x5,]
+x6
+```
+
+--- &vcenter .largecontent
+
+## 指令的壓縮
+
+- 請大家學習「被壓縮的程式碼」該如何解讀
+    - 掌握運算符號的運算順序
+
+```{r}
+power[power$name == "資訊服務業" & power$year == 89,]
+```
+
+--- .segue .dark
+
+## 資料的探索
+
+--- &vcenter .largecontent
+
+## 探索一個變數
+
+### 量化數據
+
+- 敘述統計量：`mean`、`sd`、`median`、`quantile`
+- 繪圖看分佈：`density`
+
+### 質化數據
+
+- 分佈表格：`table`
+
+--- &vcenter 
+
+## 利用說明文件了解函數內容
+
+### 範例：學習`mean`的用法
+
+- 閱讀說明文件
+    ```{r mean.help, eval = FALSE, echo=TRUE}
+    ?mean
+    ```
+- 嘗試範例
+    ```{r mean.example, eval = FALSE, echo = TRUE} 
+    example(mean)
+    ```
+- 自動完成
+    - 在命令列輸入`mena(`後按下`tab`
+
+--- &vcenter .largecontent
+
+## 探索一個量化變數
+
+### 挑戰：學習`sd`的用法
+
+--- &vcenter .largecontent 
+
+## 探索一個量化變數
+
+### 挑戰：選取<b>出版業合計</b>的歷年用電消耗量資料
+
+<br/>
+
+### 範例：使用`mean`求<b>出版業合計</b>的歷年用電平均值
+
+<br/>
+
+### 挑戰：使用`sd`求<b>出版業合計</b>的歷年用電標準差
+
+*** =pnotes
+
+1. 選取<b>出版業合計</b>的歷年用電消耗量資料
+2. 在`mean`中利用1.的結果
+3. 在`sd`中利用1.的結果
+
+--- &vcenter .largecontent
+
+## 探索一個質化變數
+
+1. 選取電力資料中所有的標籤，存成`label`變數
+2. 學習`table`的用法
+    - `?table`
+    - `example(table)`
+3. 利用`table`觀察標籤的個數
+
+*** =pnotes
+
+```{r table.example, echo = TRUE}
+data(power, package = "DSP2014R")
+label <- power[["label"]]
+# ?table
+# table(label)
+```
+
+--- &vcenter .largecontent
+
+## 探索變數間的關係
+
+- `ftable`：質化 v.s. 質化
+- bar chart：質化 v.s. 量化
+- scatter plot： 量化 v.s. 量化
+
+--- &vcenter .largecontent
+
+## 探索質化變數與質化變數的關係
+
+```{r ftable.example, echo = TRUE, eval = FALSE}
+?ftable
+example(ftable)
+```
+
+```
+ftable> ## Start with a contingency table.
+ftable> ftable(Titanic, row.vars = 1:3)
+                   Survived  No Yes
+Class Sex    Age                   
+1st   Male   Child            0   5
+             Adult          118  57
+      Female Child            0   1
+             Adult            4 140
+```
+
+--- &vcenter .largecontent
+
+## 描述資料間的關係：`formula`物件
+
+### 變數之間的因果關係
+
+`r fig("500px-Ishikawa_Fishbone_Diagram.svg.png", 100)`
+
+出處：<http://en.wikipedia.org/wiki/Causality>
+
+--- &vcenter .largecontent
+
+## 描述資料間的關係：`formula`物件
+
+`Column Name 1 ~ Column Name 2 + ...`
+
+- 給定一個表格
+    - `Column Name 1`是代表結果資料的欄位名稱
+    - `Column Name 2`是代表原因資料的欄位名稱
+    - `...`表示原因不止一個欄位
+- formula中的欄位名稱不用加上雙引號
+
+```{r ftable.formula, eval = FALSE, echo = TRUE}
+ftable(Survived ~ Sex, Titanic)
+ftable(Survived ~ Sex + Class, Titanic)
+```
+
+--- .dark .segue
+
+## R 的基礎繪圖
+
+--- &vcenter .largecontent
+
+## 繪圖之前的整理資料：質化 v.s. 量化
+
+```{r power.level1.100, echo = TRUE, cache=TRUE}
+data(power, package = "DSP2014R")
+# unique(power$label)
+label <- power$label
+label.level1 <- label %in% paste0(LETTERS, ".")
+year.100 <- power[["year"]] == 100
+power.level1.100 <- power[label.level1 & year.100,]
+```
+
+- 同時選取字母開頭<b>且</b>年度為100的資料
+- 學習功能函數和內定變數: `unique`, `%in%`, `paste0`, `LETTERS`
+
+--- &vcenter .largecontent
+
+## barplot
+
+```{r barplot, depends = "power.level1.100", echo=TRUE, fig.height = 5}
+barplot(height = power.level1.100$power, names.arg = power.level1.100$label)
+```
+
+--- &vcenter largecontent
+
+## 繪圖之前的整理資料：量化 v.s. 量化
+
+```{r power.91, echo = TRUE, cache=TRUE}
+data(power, package = "DSP2014R")
+label <- power$label
+power.91 <- power[label == "91",]
+```
+
+- 選取`label`為`"91"`的列
+
+--- &vcenter .largecontent
+
+## scatter plot
+
+```{r power.91.scatter_plot, echo = TRUE, dependson="power.91", fig.height=5}
+plot(power ~ year, power.91)
+```
+
+- 原因在x軸，結果在y軸
+
+--- &vcenter .largecontent
+
+## 圖形的美化
+
+### Maker精神：雕圖
+
+- 學習`par`中的參數
+- 複刻別人的code
+
+### 站在巨人的肩膀上
+
+- 使用如ggplot2或ggvis套件
+
+--- &twocol
+
+## [Watercolor Plot](http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/)
+
+*** =left
+
+<center>
+```{r cars, echo = FALSE}
+plot(dist ~ speed, cars)
+```
+</center>
+
+*** =right
+
+<center>
+```{r cars-watercolor, echo = FALSE, results='hide', cache = TRUE}
+source(system.file("scripts/vwReg.R", package = "DSP2014R"))
+vwReg(dist ~ speed, cars, shade.alpha = 0,
+palette = colorRampPalette(c("black", "grey30", "white"), bias = 4)(20))
+```
+</center>
+
+--- &vcenter .largecontent
+
+## 清楚的畫圖
+
+- 範圍：`xlim`, `ylim`
+- 標題：`main`, `xlab`, `ylab`
+- 顏色、圖樣：`color`, `pch`
+- 坐標軸：`axis`
+- 圖說：`legends`
+- 數學符號：`help("plotmath")`
+
+--- &vcenter .largecontent
+
+## 學習圖的參數 - 以pch為例
+
+```{r pch.example, echo = TRUE, eval = FALSE}
+help("pch")
+example(pch)
+```
+
+
+--- &vcenter
+
+```{r power.91-clearer, dependson="power.91", echo = TRUE, eval = FALSE}
+# par(family = "STKaiti") # for OS X
+plot(power ~ year, power.91, main = "歷年公務機構及國訪事業合計用電量",
+     xlab = "年(民國)", ylab = "用電量（十億度）", yaxt = 'n', pch = 2)
+axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c("2.0", "2.2", "2.4", "2.6"))
+```
+
+```{r power.91-clearer.fig, dependson="power.91", echo = FALSE, eval = TRUE, warning=FALSE}
+par(mar = c(5.1, 5.1, 4.1, 2.1), family = "STKaiti")
+plot(power ~ year, power.91, main = "歷年公務機構及國訪事業合計用電量",
+     xlab = "年(民國)", ylab = "用電量（十億度）", yaxt = 'n', pch = 2)
+axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c("2.0", "2.2", "2.4", "2.6"))
+```
+
+--- .dark .segue
+
+## 圖表的輸出
+
+--- &vcenter .largecontent
+
+## 輸出圖片
+
+- Rstudio UI
+- `savePlot`
+- `bmp`、`png`、`jpeg`或`tiff`
+
+--- &vcenter .largecontent
+
+## 輸出表格
+
+- `write.csv`
+- `xtable`套件
+
+--- &vcenter .largecontent
+
+## R markdown 火力展示
+
+- 請見現場live demo
+
+--- .segue .dark
+
+## 更強大的繪圖功能示例
+
+--- &twocol
+
+## ggplot2
+
+*** =left
+
+```{r ggplot2-left, eval = TRUE, results='hide', dependson="power.91"}
+plot(power ~ year, power.91)
+```
+
+*** =right
+
+```{r ggplot2-right, eval = TRUE, results='hide', dependson="power.91"}
+library(ggplot2)
+ggplot(power.91, aes(x = year, y = power)) +
+  geom_point()
+```
+
+--- &vcenter
+
+## shiny
+
+<http://shiny.rstudio.com/gallery/>
+
+--- .dark .segue
+
+## 總結
+
+--- &vcenter .largecontent
+
+## 今天的目標
+
+### 環境設定
+
+- 建立可以使用R 的環境
+- 了解R 的使用界面
+
+### 學習R 語言
+
+- 透過實際的範例學習R 語言
+    - 讀取資料
+    - 選取資料
+    - 敘述統計量與視覺化
+- 利用實例來傳授學習的心法
+
+--- &vcenter .largecontent
+
+## 掌握心法後，如何自行利用R 解決問題
+
+- 了解自己的需求
+- 詢問關鍵字與函數
+    - 歡迎來信 <wush978@gmail.com> 或其他教師
+    - 多多交流
+        - [Taiwan R User Group](http://www.meetup.com/Taiwan-R)，mailing list: <Taiwan-useR-Group-list@meetup.com>
+        - ptt R_Language版
+        - [R軟體使用者論壇](https://groups.google.com/forum/#!forum/taiwanruser)
+    - `sos`套件，請見Demo
+- 利用今日習得的心法掌握函數用法
+
+--- &vcenter .largecontent
+
+## 你喜歡R 嗎？
+
+- R 是由一群來自世界上的志工貢獻而成的
+- 你覺得R 有不好用的地方嗎？
+    - 歡迎聯絡我，讓我們一起來貢獻，改進R 的使用體驗
+
+<img src="assets/img/Rlogo.jpg" width="225" height="171"/>
+
+--- &vcenter .largecontent
+
+## DSP 提供的未來課程
+
+--- &vcenter .largecontent
+
+## Q&A
+
+---
