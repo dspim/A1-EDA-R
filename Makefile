@@ -1,6 +1,9 @@
-all :
-	Rscript -e "library(slidify);slidify('index.Rmd')"
+all : EDA.html EDA-R.html
+	
+
+%.html : %.Rmd
+	Rscript -e "library(slidify);slidify('$<')"
 
 clean :
 	-rm .cache/*
-	-rm index.html index.md
+	-rm *.html *.md
