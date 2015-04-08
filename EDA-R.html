@@ -578,7 +578,7 @@ rainfall2 &lt;- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
 <pre><code class="r">Sys.time()
 </code></pre>
 
-<pre><code>## [1] &quot;2015-04-09 00:32:25 CST&quot;
+<pre><code>## [1] &quot;2015-04-09 01:31:08 CST&quot;
 </code></pre>
 
 <pre><code class="r">ISOdatetime(year = 1970, month = 1, day = 1, 
@@ -778,7 +778,7 @@ as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
 
 <!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
 
-<!-- Wed Apr  8 03:07:29 2015 -->
+<!-- Thu Apr  9 01:03:38 2015 -->
 
 <table border=1>
   <tr> <td> date </td> <td> factor </td> <td> tot </td> <td> integer </td> <td> min.bemp </td> <td> integer </td> </tr>
@@ -804,7 +804,7 @@ as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
 
 <!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
 
-<!-- Thu Apr  9 00:32:25 2015 -->
+<!-- Thu Apr  9 01:31:08 2015 -->
 
 <table border=1>
   <tr> <td> 日期 </td> <td> factor </td> <td> 總停車格 </td> <td> integer </td> <td> 最小空位數 </td> <td> integer </td> </tr>
@@ -1032,7 +1032,12 @@ write(raw2, &quot;data/ubikeweatherutf8.csv&quot;)
   </hgroup>
   <article data-timings="">
     <pre><code class="r">library(RSQLite)
-db.path &lt;- &quot;ubike.db&quot;
+</code></pre>
+
+<pre><code>## Loading required package: DBI
+</code></pre>
+
+<pre><code class="r">db.path &lt;- &quot;ubike.db&quot;
 drv &lt;- dbDriver(&quot;SQLite&quot;)
 db &lt;- dbConnect(drv, db.path)
 dbWriteTable(db, &quot;ubike&quot;, head(ubike))
@@ -1226,7 +1231,7 @@ power2 &lt;- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372
 
 <pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
 ## [4] 2014-12-08 2014-12-08 2014-12-08
-## Levels: 2014-12-08
+## 114 Levels: 2014-12-08 ... 2015-03-31
 </code></pre>
 
 <pre><code class="r"># head(ubike$日期)
@@ -1235,7 +1240,7 @@ head(ubike[,1])
 
 <pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
 ## [4] 2014-12-08 2014-12-08 2014-12-08
-## Levels: 2014-12-08
+## 114 Levels: 2014-12-08 ... 2015-03-31
 </code></pre>
 
 </article>
@@ -1617,16 +1622,21 @@ Class Sex    Age
   <h2>小挑戰（參考答案）</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code>## Error: number of columns of matrices
-## must match (see arg 3)
-</code></pre>
+<pre><code class="r">x1 &lt;- ubike[[&quot;場站區域&quot;]] == &quot;信義區&quot;
+x2 &lt;- ubike[[&quot;日期&quot;]] == &quot;2015-03-01&quot;
+x3 &lt;- ubike[x1 &amp; x2, &quot;平均車輛數&quot;]
+x4 &lt;- ubike[x1 &amp; x2, &quot;總停車格&quot;]
+x5 &lt;- x3 &lt; x4 / 2
+x6 &lt;- ubike[x1 &amp; x2, &quot;時間&quot;]
+ftable(x6, x5)
 
-<pre><code>## Error: number of columns of matrices
-## must match (see arg 3)
-</code></pre>
+x1 &lt;- filter(ubike, 場站區域 == &quot;信義區&quot;, 日期 == &quot;2015-03-01&quot;)
+x2 &lt;- mutate(x1, 空位較多 = 平均車輛數 &lt; 總停車格 / 2)
+ftable(x2[[&quot;時間&quot;]], x2[[&quot;空位較多&quot;]])
 
-<pre><code>## Error: number of columns of matrices
-## must match (see arg 3)
+tbl &lt;- filter(ubike, 場站區域 == &quot;信義區&quot;, 日期 == &quot;2015-03-01&quot;)  %&gt;%
+  mutate(空位較多 = 平均車輛數 &lt; 總停車格 / 2)
+ftable(tbl[[&quot;時間&quot;]], tbl[[&quot;空位較多&quot;]])
 </code></pre>
 
 </article>
@@ -1634,7 +1644,7 @@ Class Sex    Age
 </slide>
 <slide class="dark segue" id="slide-72" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
-    <h2>ggplot</h2>
+    <h2>ggplot2 簡介</h2>
   </hgroup>
   <article data-timings="">
     
@@ -1643,47 +1653,22 @@ Class Sex    Age
 </slide>
 <slide class="largecontent" id="slide-73" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>繪圖之前的整理資料：質化 v.s. 量化</h2>
+  <h2>ggplot2 的核心思想</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">data(power, package = &quot;DSP2014R&quot;)
-</code></pre>
-
-<pre><code>## Error: there is no package called
-## &#39;DSP2014R&#39;
-</code></pre>
-
-<pre><code class="r"># unique(power$label)
-label &lt;- power$label
-</code></pre>
-
-<pre><code>## Error: object of type &#39;closure&#39; is not
-## subsettable
-</code></pre>
-
-<pre><code class="r">label.level1 &lt;- label %in% paste0(LETTERS, &quot;.&quot;)
-</code></pre>
-
-<pre><code>## Error: &#39;match&#39; requires vector
-## arguments
-</code></pre>
-
-<pre><code class="r">year.100 &lt;- power[[&quot;year&quot;]] == 100
-</code></pre>
-
-<pre><code>## Error: object of type &#39;closure&#39; is not
-## subsettable
-</code></pre>
-
-<pre><code class="r">power.level1.100 &lt;- power[label.level1 &amp; year.100,]
-</code></pre>
-
-<pre><code>## Error: object &#39;label.level1&#39; not found
-</code></pre>
+<ul>
+<li>先把資料適當的整理成<code>data.frame</code></li>
+<li>將<code>data.frame</code>送至<code>ggplot</code>函數</li>
+<li>各種繪圖工具利用<code>aes</code>定位欄位和對應的圖的元素
 
 <ul>
-<li>同時選取字母開頭<b>且</b>年度為100的資料</li>
-<li>學習功能函數和內定變數: <code>unique</code>, <code>%in%</code>, <code>paste0</code>, <code>LETTERS</code></li>
+<li>x座標、y座標、顏色、分群</li>
+</ul></li>
+<li>一層一層的疊上繪圖要素
+
+<ul>
+<li>點、線、各種文字與標題說明</li>
+</ul></li>
 </ul>
 
 </article>
@@ -1691,131 +1676,100 @@ label &lt;- power$label
 </slide>
 <slide class="largecontent" id="slide-74" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>barplot</h2>
+  <h2>質化 v.s. 量化：繪圖之前的整理資料</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">barplot(height = power.level1.100$power, names.arg = power.level1.100$label)
-</code></pre>
+<h3>信義區各站點在&quot;2015-02&quot;的平均降雨量</h3>
 
-<pre><code>## Error: object &#39;power.level1.100&#39; not
-## found
+<pre><code class="r"># grepl(&quot;要搜尋的字串&quot;, x, fixed = TRUE)
+x1.1 &lt;- grepl(&quot;2015-02&quot;, ubike[[&quot;日期&quot;]], fixed = TRUE)
+x1.2 &lt;- ubike[[&quot;場站區域&quot;]] == &quot;信義區&quot;
+x2 &lt;- group_by(ubike[x1.1,], 場站名稱)
+x3 &lt;- summarise(x2, 平均降雨量 = mean(降雨量))
+
+x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE), 
+             場站區域 == &quot;信義區&quot;) %&gt;%
+  group_by(場站名稱) %&gt;% summarise(平均降雨量=mean(降雨量))
 </code></pre>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-75" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-75" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>繪圖之前的整理資料：量化 v.s. 量化</h2>
+  <h2>質化 v.s. 量化：barchart</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">data(power, package = &quot;DSP2014R&quot;)
-</code></pre>
+<pre><code class="r">thm &lt;- theme(text=element_text(size=18))
+las2 &lt;- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-<pre><code>## Error: there is no package called
-## &#39;DSP2014R&#39;
+ggplot(x3) +
+  geom_bar(aes(x = 場站名稱, y = 平均降雨量), stat = &quot;identity&quot;) +
+  thm + las2
 </code></pre>
-
-<pre><code class="r">label &lt;- power$label
-</code></pre>
-
-<pre><code>## Error: object of type &#39;closure&#39; is not
-## subsettable
-</code></pre>
-
-<pre><code class="r">power.91 &lt;- power[label == &quot;91&quot;,]
-</code></pre>
-
-<pre><code>## Error: comparison (1) is possible only
-## for atomic and list types
-</code></pre>
-
-<ul>
-<li>選取<code>label</code>為<code>&quot;91&quot;</code>的列</li>
-</ul>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-76" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="" id="slide-76" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>scatter plot</h2>
+  <h2>量化 v.s. 量化：繪圖之前的整理資料</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">plot(power ~ year, power.91)
-</code></pre>
+<h3>信義區各站點在&quot;2015-02&quot;的平均溼度 vs. 平均雨量</h3>
 
-<pre><code>## Error: object &#39;power.91&#39; not found
-</code></pre>
+<pre><code class="r"># grepl(&quot;要搜尋的字串&quot;, x, fixed = TRUE)
+x1.1 &lt;- grepl(&quot;2015-02&quot;, ubike[[&quot;日期&quot;]], fixed = TRUE)
+x1.2 &lt;- ubike[[&quot;場站區域&quot;]] == &quot;信義區&quot;
+x2 &lt;- group_by(ubike[x1.1,], 場站名稱)
+x3 &lt;- summarise(x2, 平均降雨量 = mean(降雨量), 平均溼度 = mean(溼度))
 
-<ul>
-<li>原因在x軸，結果在y軸</li>
-</ul>
+x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE), 
+             場站區域 == &quot;信義區&quot;) %&gt;%
+  group_by(場站名稱) %&gt;% summarise(平均降雨量 = mean(降雨量), 平均溼度 = mean(溼度))
+</code></pre>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
 <slide class="largecontent" id="slide-77" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>圖形的美化</h2>
+  <h2>量化 v.s. 量化：Scatter Plot</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<h3>Maker精神：雕圖</h3>
-
 <ul>
-<li>學習<code>par</code>中的參數</li>
-<li>複刻別人的code</li>
+<li>原因在x軸，結果在y軸</li>
 </ul>
 
-<h3>站在巨人的肩膀上</h3>
-
-<ul>
-<li>使用如ggplot2或ggvis套件</li>
-</ul>
+<pre><code class="r">ggplot(x3) +
+  geom_point(aes(x = 平均溼度, y = 平均降雨量)) +
+  thm + las2
+</code></pre>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-78" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
-  <hgroup>
-    <h2><a href="http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/">Watercolor Plot</a></h2>
-  </hgroup>
-  <article data-timings="">
-    
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
-  <p><center>
-<img src="assets/fig/cars.png" alt="plot of chunk cars"> 
-</center></p>
-
-</div>
-<div style='float:right;width:48%;' class='centered'>
-  <p><center></p>
-
-<pre><code>## Error: cannot coerce type &#39;closure&#39; to
-## vector of type &#39;character&#39;
+<slide class="largecontent" id="slide-78" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>量化 v.s. 量化：Grouped Scatter Plot</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">ggplot(x3) +
+  geom_point(aes(x = 平均溼度, y = 平均降雨量, colour = 場站名稱)) +
+  thm + las2
 </code></pre>
 
-<pre><code>## Error: could not find function &quot;vwReg&quot;
-</code></pre>
-
-<p></center></p>
-
-</div>
-  </article>
-  <!-- Presenter Notes -->
+</article>
+<!-- Presenter Notes -->
 </slide>
 <slide class="largecontent" id="slide-79" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>清楚的畫圖</h2>
+  
 </hgroup>
 <article class = 'flexbox vcenter'>
 <ul>
-<li>範圍：<code>xlim</code>, <code>ylim</code></li>
-<li>標題：<code>main</code>, <code>xlab</code>, <code>ylab</code></li>
-<li>顏色、圖樣：<code>color</code>, <code>pch</code></li>
-<li>坐標軸：<code>axis</code></li>
-<li>圖說：<code>legends</code></li>
-<li>數學符號：<code>help(&quot;plotmath&quot;)</code></li>
+<li><a href="http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf">ggplot2 cheat sheet from RStudio Inc.</a></li>
+<li><a href="http://docs.ggplot2.org/current/index.html">ggplot2 官方文件站點</a></li>
 </ul>
 
 </article>
@@ -1823,35 +1777,48 @@ label &lt;- power$label
 </slide>
 <slide class="largecontent" id="slide-80" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>學習圖的參數 - 以pch為例</h2>
+  <h2>圖形的美化</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">help(&quot;pch&quot;)
-example(pch)
-</code></pre>
+<h3>Maker精神：雕圖</h3>
+
+<ul>
+<li>學習更底層的繪圖指令，如<code>grid</code>套件</li>
+</ul>
+
+<h3>站在巨人的肩膀上</h3>
+
+<ul>
+<li>使用如<code>ggthemes</code>等套件</li>
+</ul>
 
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-81" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  
-</hgroup>
-<article class = 'flexbox vcenter'>
-<pre><code class="r"># par(family = &quot;STKaiti&quot;) # for OS X
-plot(power ~ year, power.91, main = &quot;歷年公務機構及國訪事業合計用電量&quot;,
-     xlab = &quot;年(民國)&quot;, ylab = &quot;用電量（十億度）&quot;, yaxt = &#39;n&#39;, pch = 2)
-axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quot;, &quot;2.4&quot;, &quot;2.6&quot;))
-</code></pre>
+<slide class="" id="slide-81" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2><a href="https://github.com/jrnold/ggthemes">ggthemes</a></h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><br/>
+<br/>
+<center>
+<img src='assets/img/687474703a2f2f692e696d6775722e636f6d2f764e64366543542e706e67.png' style='max-width: 100%;max-height: 100%'></img>
+</center></p>
 
-<pre><code>## Error: object &#39;power.91&#39; not found
-</code></pre>
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><br/>
+<br/>
+<center>
+<img src='assets/img/687474703a2f2f692e696d6775722e636f6d2f7350764165334a2e706e67.png' style='max-width: 100%;max-height: 100%'></img>
+</center></p>
 
-<pre><code>## Error: plot.new has not been called yet
-</code></pre>
-
-</article>
-<!-- Presenter Notes -->
+</div>
+  </article>
+  <!-- Presenter Notes -->
 </slide>
 <slide class="dark segue" id="slide-82" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
@@ -1901,35 +1868,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="segue dark" id="slide-86" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
-  <hgroup>
-    <h2>更強大的繪圖功能示例</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-<slide class="" id="slide-87" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
-  <hgroup>
-    <h2>ggplot2</h2>
-  </hgroup>
-  <article data-timings="">
-    
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
-  <pre><code>## Error: object &#39;power.91&#39; not found
-</code></pre>
-
-</div>
-<div style='float:right;width:48%;' class='centered'>
-  <pre><code>## Error: object &#39;power.91&#39; not found
-</code></pre>
-
-</div>
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-<slide class="" id="slide-88" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="" id="slide-86" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>shiny</h2>
 </hgroup>
@@ -1939,7 +1878,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="dark segue" id="slide-89" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="dark segue" id="slide-87" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
     <h2>總結</h2>
   </hgroup>
@@ -1948,9 +1887,9 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
   </article>
   <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-90" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-88" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
-  <h2>今天的目標</h2>
+  <h2>本週目標</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
 <h3>環境設定</h3>
@@ -1976,7 +1915,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-91" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-89" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>掌握心法後，如何自行利用R 解決問題</h2>
 </hgroup>
@@ -2002,7 +1941,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-92" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-90" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>你喜歡R 嗎？</h2>
 </hgroup>
@@ -2021,16 +1960,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-93" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
-<hgroup>
-  <h2>DSP 提供的未來課程</h2>
-</hgroup>
-<article class = 'flexbox vcenter'>
-
-</article>
-<!-- Presenter Notes -->
-</slide>
-<slide class="largecontent" id="slide-94" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-91" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>Q&amp;A</h2>
 </hgroup>
@@ -2039,7 +1969,7 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-95" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="" id="slide-92" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <article data-timings="">
     
   </article>
@@ -2477,61 +2407,61 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=72 title='ggplot'>
+        data-slide=72 title='ggplot2 簡介'>
          72
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=73 title='繪圖之前的整理資料：質化 v.s. 量化'>
+        data-slide=73 title='ggplot2 的核心思想'>
          73
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='barplot'>
+        data-slide=74 title='質化 v.s. 量化：繪圖之前的整理資料'>
          74
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=75 title='繪圖之前的整理資料：量化 v.s. 量化'>
+        data-slide=75 title='質化 v.s. 量化：barchart'>
          75
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='scatter plot'>
+        data-slide=76 title='量化 v.s. 量化：繪圖之前的整理資料'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='圖形的美化'>
+        data-slide=77 title='量化 v.s. 量化：Scatter Plot'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='<a href="http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/">Watercolor Plot</a>'>
+        data-slide=78 title='量化 v.s. 量化：Grouped Scatter Plot'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='清楚的畫圖'>
+        data-slide=79 title=''>
          79
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=80 title='學習圖的參數 - 以pch為例'>
+        data-slide=80 title='圖形的美化'>
          80
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=81 title=''>
+        data-slide=81 title='<a href="https://github.com/jrnold/ggthemes">ggthemes</a>'>
          81
       </a>
     </li>
@@ -2561,62 +2491,44 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quo
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=86 title='更強大的繪圖功能示例'>
+        data-slide=86 title='shiny'>
          86
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=87 title='ggplot2'>
+        data-slide=87 title='總結'>
          87
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=88 title='shiny'>
+        data-slide=88 title='本週目標'>
          88
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=89 title='總結'>
+        data-slide=89 title='掌握心法後，如何自行利用R 解決問題'>
          89
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=90 title='今天的目標'>
+        data-slide=90 title='你喜歡R 嗎？'>
          90
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=91 title='掌握心法後，如何自行利用R 解決問題'>
+        data-slide=91 title='Q&amp;A'>
          91
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=92 title='你喜歡R 嗎？'>
+        data-slide=92 title=''>
          92
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=93 title='DSP 提供的未來課程'>
-         93
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=94 title='Q&amp;A'>
-         94
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=95 title=''>
-         95
       </a>
     </li>
   </ul>

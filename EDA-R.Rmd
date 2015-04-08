@@ -32,6 +32,8 @@ fit100 <- fig <- function(path, size = 100) {
 fit50 <- function(fname) fit100(fname, 50)
 sys_name <- Sys.info()["sysname"] %>% tolower
 sys_encode <- c("utf8", "utf8", "big5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
+thm <- theme(text=element_text(size=18))
+las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 ```{r loadubike, echo = FALSE, cache=TRUE}
@@ -523,7 +525,7 @@ path <- "data/ubikeweatherutf8.csv"
 
 - 先讀取一部分，再讀取全部
 
-```{r read.table, echo = TRUE, results = "none"}
+```{r read.table, echo = TRUE, eval = FALSE}
 ubike <- read.table(path, sep = ",", header = TRUE, nrows = 100)
 # system.time(ubike <- read.table(path, sep = ",", header = TRUE))
 # object.size(ubike) # 約86MB
@@ -1009,7 +1011,7 @@ Class Sex    Age
 
 ## 小挑戰（參考答案）
 
-```{r, results="hide"}
+```{r, echo = TRUE, results = "hide", dependson="c.ubike"}
 x1 <- ubike[["場站區域"]] == "信義區"
 x2 <- ubike[["日期"]] == "2015-03-01"
 x3 <- ubike[x1 & x2, "平均車輛數"]
@@ -1044,44 +1046,80 @@ ftable(tbl[["時間"]], tbl[["空位較多"]])
 
 --- &vcenter .largecontent
 
-## 繪圖之前的整理資料：質化 v.s. 量化
+## 質化 v.s. 量化：繪圖之前的整理資料
 
-```{r ubike.site.rainfall, echo = TRUE, cache=TRUE}
+### 信義區各站點在"2015-02"的平均降雨量
 
+```{r ubike.site.rainfall1, echo = TRUE, cache=TRUE, dependson="c.ubike"}
+# grepl("要搜尋的字串", x, fixed = TRUE)
+x1.1 <- grepl("2015-02", ubike[["日期"]], fixed = TRUE)
+x1.2 <- ubike[["場站區域"]] == "信義區"
+x2 <- group_by(ubike[x1.1,], 場站名稱)
+x3 <- summarise(x2, 平均降雨量 = mean(降雨量))
+
+x3 <- filter(ubike, grepl("2015-02", 日期, fixed = TRUE), 
+             場站區域 == "信義區") %>%
+  group_by(場站名稱) %>% summarise(平均降雨量=mean(降雨量))
 ```
-
-- 同時選取字母開頭<b>且</b>年度為100的資料
-- 學習功能函數和內定變數: `unique`, `%in%`, `paste0`, `LETTERS`
 
 --- &vcenter .largecontent
 
-## barplot
+## 質化 v.s. 量化：barchart
 
-```{r barplot, depends = "power.level1.100", echo=TRUE, fig.height = 5}
-barplot(height = power.level1.100$power, names.arg = power.level1.100$label)
+```{r ubike.site.rainfall2, depends = "ubike.site.rainfall1", echo=TRUE, fig.height = 5, results = "hide", warning=FALSE, fig.show='hide'}
+thm <- theme(text=element_text(size=18))
+las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(x3) +
+  geom_bar(aes(x = 場站名稱, y = 平均降雨量), stat = "identity") +
+  thm + las2
 ```
 
 --- &vcenter largecontent
 
-## 繪圖之前的整理資料：量化 v.s. 量化
+## 量化 v.s. 量化：繪圖之前的整理資料
 
-```{r power.91, echo = TRUE, cache=TRUE}
-data(power, package = "DSP2014R")
-label <- power$label
-power.91 <- power[label == "91",]
+### 信義區各站點在"2015-02"的平均溼度 vs. 平均雨量
+
+```{r ubike.site.wet.rainfall1, echo = TRUE, cache=TRUE, dependson="c.ubike"}
+# grepl("要搜尋的字串", x, fixed = TRUE)
+x1.1 <- grepl("2015-02", ubike[["日期"]], fixed = TRUE)
+x1.2 <- ubike[["場站區域"]] == "信義區"
+x2 <- group_by(ubike[x1.1,], 場站名稱)
+x3 <- summarise(x2, 平均降雨量 = mean(降雨量), 平均溼度 = mean(溼度))
+
+x3 <- filter(ubike, grepl("2015-02", 日期, fixed = TRUE), 
+             場站區域 == "信義區") %>%
+  group_by(場站名稱) %>% summarise(平均降雨量 = mean(降雨量), 平均溼度 = mean(溼度))
 ```
-
-- 選取`label`為`"91"`的列
 
 --- &vcenter .largecontent
 
-## scatter plot
-
-```{r power.91.scatter_plot, echo = TRUE, dependson="power.91", fig.height=5}
-plot(power ~ year, power.91)
-```
+## 量化 v.s. 量化：Scatter Plot
 
 - 原因在x軸，結果在y軸
+
+```{r ubike.site.wet.rainfall2, echo = TRUE, dependson="ubike.site.wet.rainfall1", fig.height=5, results = "hide", warning=FALSE, fig.show='hide'}
+ggplot(x3) +
+  geom_point(aes(x = 平均溼度, y = 平均降雨量)) +
+  thm + las2
+```
+
+--- &vcenter .largecontent
+
+## 量化 v.s. 量化：Grouped Scatter Plot
+
+```{r ubike.site.wet.rainfall3, echo = TRUE, dependson="ubike.site.wet.rainfall1", fig.height=5, results = "hide", warning=FALSE, fig.show='hide'}
+ggplot(x3) +
+  geom_point(aes(x = 平均溼度, y = 平均降雨量, colour = 場站名稱)) +
+  thm + las2
+```
+
+
+--- &vcenter .largecontent
+
+- [ggplot2 cheat sheet from RStudio Inc.](http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+- [ggplot2 官方文件站點](http://docs.ggplot2.org/current/index.html)
 
 --- &vcenter .largecontent
 
@@ -1089,71 +1127,31 @@ plot(power ~ year, power.91)
 
 ### Maker精神：雕圖
 
-- 學習`par`中的參數
-- 複刻別人的code
+- 學習更底層的繪圖指令，如`grid`套件
 
 ### 站在巨人的肩膀上
 
-- 使用如ggplot2或ggvis套件
+- 使用如`ggthemes`等套件
 
 --- &twocol
 
-## [Watercolor Plot](http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/)
+## [ggthemes](https://github.com/jrnold/ggthemes)
 
 *** =left
 
+<br/>
+<br/>
 <center>
-```{r cars, echo = FALSE}
-plot(dist ~ speed, cars)
-```
+`r fig("687474703a2f2f692e696d6775722e636f6d2f764e64366543542e706e67.png")`
 </center>
 
 *** =right
 
+<br/>
+<br/>
 <center>
-```{r cars-watercolor, echo = FALSE, results='hide', cache = TRUE}
-source(system.file("scripts/vwReg.R", package = "DSP2014R"))
-vwReg(dist ~ speed, cars, shade.alpha = 0,
-palette = colorRampPalette(c("black", "grey30", "white"), bias = 4)(20))
-```
+`r fig("687474703a2f2f692e696d6775722e636f6d2f7350764165334a2e706e67.png")`
 </center>
-
---- &vcenter .largecontent
-
-## 清楚的畫圖
-
-- 範圍：`xlim`, `ylim`
-- 標題：`main`, `xlab`, `ylab`
-- 顏色、圖樣：`color`, `pch`
-- 坐標軸：`axis`
-- 圖說：`legends`
-- 數學符號：`help("plotmath")`
-
---- &vcenter .largecontent
-
-## 學習圖的參數 - 以pch為例
-
-```{r pch.example, echo = TRUE, eval = FALSE}
-help("pch")
-example(pch)
-```
-
-
---- &vcenter
-
-```{r power.91-clearer, dependson="power.91", echo = TRUE, eval = FALSE}
-# par(family = "STKaiti") # for OS X
-plot(power ~ year, power.91, main = "歷年公務機構及國訪事業合計用電量",
-     xlab = "年(民國)", ylab = "用電量（十億度）", yaxt = 'n', pch = 2)
-axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c("2.0", "2.2", "2.4", "2.6"))
-```
-
-```{r power.91-clearer.fig, dependson="power.91", echo = FALSE, eval = TRUE, warning=FALSE}
-par(mar = c(5.1, 5.1, 4.1, 2.1), family = "STKaiti")
-plot(power ~ year, power.91, main = "歷年公務機構及國訪事業合計用電量",
-     xlab = "年(民國)", ylab = "用電量（十億度）", yaxt = 'n', pch = 2)
-axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c("2.0", "2.2", "2.4", "2.6"))
-```
 
 --- .dark .segue
 
@@ -1180,28 +1178,6 @@ axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c("2.0", "2.2", "2.4", "2.6"))
 
 - 請見現場live demo
 
---- .segue .dark
-
-## 更強大的繪圖功能示例
-
---- &twocol
-
-## ggplot2
-
-*** =left
-
-```{r ggplot2-left, eval = TRUE, results='hide', dependson="power.91"}
-plot(power ~ year, power.91)
-```
-
-*** =right
-
-```{r ggplot2-right, eval = TRUE, results='hide', dependson="power.91"}
-library(ggplot2)
-ggplot(power.91, aes(x = year, y = power)) +
-  geom_point()
-```
-
 --- &vcenter
 
 ## shiny
@@ -1214,7 +1190,7 @@ ggplot(power.91, aes(x = year, y = power)) +
 
 --- &vcenter .largecontent
 
-## 今天的目標
+## 本週目標
 
 ### 環境設定
 
@@ -1252,10 +1228,6 @@ ggplot(power.91, aes(x = year, y = power)) +
     - 歡迎聯絡我，讓我們一起來貢獻，改進R 的使用體驗
 
 <img src="assets/img/Rlogo.jpg" width="225" height="171"/>
-
---- &vcenter .largecontent
-
-## DSP 提供的未來課程
 
 --- &vcenter .largecontent
 
