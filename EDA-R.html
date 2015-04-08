@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EDA with R</title>
+  <meta charset="utf-8">
+  <meta name="description" content="EDA with R">
+  <meta name="author" content="Wush Wu">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012-dsp/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012-dsp/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012-dsp/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/zenburn.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="libraries/frameworks/io2012-dsp/js/jquery-1.7.min.js"></script>
+  <!-- <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> -->
+  <script data-main="libraries/frameworks/io2012-dsp/js/slides" 
+    src="libraries/frameworks/io2012-dsp/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>EDA with R</h1>
+    <h2>智庫驅動</h2>
+    <p>Wush Wu<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>關於講師</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <h3>Wush Wu</h3>
+
+<ul>
+<li>Taiwan R User Group 共同創辦人</li>
+<li>以下R 套件的貢獻者:
+
+<ul>
+<li>FeatureHashing</li>
+<li>digest</li>
+<li>rcppcnpy</li>
+<li>knitr</li>
+</ul></li>
+<li>臺大電機所博士生</li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><img src='assets/img/wush.jpg' style='max-width: 100%;max-height: 100%'></img></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-2" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>今天的目標</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>學習R 語言</h3>
+
+<ul>
+<li>透過實際的範例學習R 語言
+
+<ul>
+<li>讀取資料</li>
+<li>選取資料</li>
+<li>敘述統計量</li>
+<li>視覺化</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-3" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>工欲善其事，必先利其器</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-4" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>Rstudio 界面</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>程式碼編輯區</li>
+<li>命令列區</li>
+<li>其他資訊區</li>
+<li>檔案系統區</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-5" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>熟悉R 和Rstudio的界面</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>了解輸入</li>
+<li>了解輸出</li>
+<li>中斷程式</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-6" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>熟悉R 和Rstudio的界面 - 請你跟我這樣做</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>命令列區</h3>
+
+<ul>
+<li>注意最左下腳的符號是<code>&gt;</code></li>
+<li>輸入<code>&quot;hello world&quot;</code>後按下Enter，檢查螢幕輸出（記得加上引號）</li>
+<li>輸入<code>1 + 1</code>後按下Enter，檢查螢幕輸出，注意有無引號</li>
+<li>輸入<code>1 +</code>後按下Enter，檢查螢幕輸出，注意最左下角的開頭變成<code>+</code></li>
+<li>按下Ctrl + C或ESC，檢查哪一個按鈕會讓左下角回復成<code>&gt;</code>開頭</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-7" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>熟悉R 和Rstudio的界面 - 請你跟我這樣做</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>命令列區</h3>
+
+<ul>
+<li>在新的一行命令列區輸入<code>he</code>之後按下Enter</li>
+<li>在新的一行命令列區輸入<code>he</code>之後按下tab</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-8" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>熟悉R 和Rstudio的界面 - 請你跟我這樣做</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>程式碼編輯區</h3>
+
+<ul>
+<li>建立新的R Script檔案</li>
+<li>在第一行輸入<code>he</code>隻後按下Ctrl + Enter後，觀察命令列區</li>
+<li>利用滑鼠點選<code>he</code>後的位置，確認游標閃爍的位置在<code>he</code>之後，按下tab</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-9" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>R 的擴充功能</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-10" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2><a href="http://cran.r-project.org/web/views/">CRAN Task Views</a></h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src='assets/img/CRAN-Task-Views.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-11" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>套件的安裝</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>UI</h3>
+
+<ul>
+<li>請見Demo</li>
+</ul>
+
+<h3>命令列</h3>
+
+<pre><code class="r">install.views(&quot;topic-name&quot;)
+install.packages(&quot;pkg-name&quot;, repos = &quot;來源&quot;)
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-12" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>套件安裝</h3>
+
+<ul>
+<li>利用UI安裝<code>RSQLite</code>、<code>ggplot2</code>、<code>magrittr</code>和<code>dplyr</code>套件</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="dark segue" id="slide-13" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>讓我們來說R 語</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-14" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>敘述句(expression)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <pre><code class="r">&quot;1;2;3;&quot;
+</code></pre>
+
+<pre><code>## [1] &quot;1;2;3;&quot;
+</code></pre>
+
+<pre><code class="r">1;2;3;
+</code></pre>
+
+<pre><code>## [1] 1
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<pre><code>## [1] 3
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <ul>
+<li>敘述句以<code>;</code>或<code>斷行</code>(輸入Enter)作結尾</li>
+<li>R 會把單引號<code>&#39;</code>或雙引號<code>&quot;</code>所包覆的敘述當成字串</li>
+<li>沒有完成的敘述句，命令列的開頭會變成<code>+</code></li>
+<li>可以用Ctrl + C 中斷敘述句</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-15" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>註解</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li><code>#</code>之後的程式碼會被當成註解
+
+<ul>
+<li>R 會完全忽略註解</li>
+<li>註解的功用是增加程式碼的可讀性</li>
+</ul></li>
+</ul>
+
+<pre><code class="r">1;2;#3
+</code></pre>
+
+<pre><code>## [1] 1
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-16" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>敘述句與數值運算</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <pre><code class="r">1 + 1
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<pre><code class="r">1 + 2 - 1
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<pre><code class="r">(1 + 1) * 2
+</code></pre>
+
+<pre><code>## [1] 4
+</code></pre>
+
+<pre><code class="r">2.5e3
+</code></pre>
+
+<pre><code>## [1] 2500
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <ul>
+<li>敘述句可以運算出一個R 物件</li>
+<li>運算的順序符合先乘除後加減，括號最優先</li>
+<li>中間有<code>e</code>的數值代表要再乘以10的冪次方</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-17" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>變數與賦值 <code>&lt;-</code>或<code>=</code></h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <pre><code class="r">One
+</code></pre>
+
+<pre><code>## Error: object &#39;One&#39; not found
+</code></pre>
+
+<pre><code class="r">One &lt;- 1
+One
+</code></pre>
+
+<pre><code>## [1] 1
+</code></pre>
+
+<pre><code class="r">Two = &quot;2&quot;
+Two
+</code></pre>
+
+<pre><code>## [1] &quot;2&quot;
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <h3>賦值</h3>
+
+<p><center>
+<img src='assets/img/assign-missing.png' style='max-width: 50%;max-height: 50%'></img>
+</center></p>
+
+<p>\[\Downarrow\]</p>
+
+<p><center>
+<img src='assets/img/assign-linking.png' style='max-width: 50%;max-height: 50%'></img>
+</center></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-18" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>向量</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <pre><code class="r">1:3
+</code></pre>
+
+<pre><code>## [1] 1 2 3
+</code></pre>
+
+<pre><code class="r">c(1, 2, 3) + 1
+</code></pre>
+
+<pre><code>## [1] 2 3 4
+</code></pre>
+
+<pre><code class="r">1:3 * 2
+</code></pre>
+
+<pre><code>## [1] 2 4 6
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <ul>
+<li>利用<code>c</code>和建立向量</li>
+<li>利用<code>:</code>建立序列</li>
+<li>運算是向量式的</li>
+</ul>
+
+<p><center><img src='assets/img/vectorize-plus-before.png' style='max-width: 50%;max-height: 50%'></img></center>
+\[\Downarrow\]
+<center><img src='assets/img/vectorize-plus-after.png' style='max-width: 50%;max-height: 50%'></img></center></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-19" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>呼叫函數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>請在Rstudio的命令列區進行以下操作</h3>
+
+<ul>
+<li>輸入<code>c</code>，按下tab
+
+<ul>
+<li>自動完成：列出所有<code>c</code>開頭的函數</li>
+<li>列出函數的說明文件</li>
+</ul></li>
+<li>清空命令列，輸入<code>?c</code>後按下Enter</li>
+<li>清空命令列，輸入<code>c</code>後按下Enter</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-20" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>函數與參數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>函數的參數可以改變函數的行為</li>
+<li>R 的函數是依照以下方式來解釋參數：
+
+<ul>
+<li>名稱的partial matching</li>
+<li>順序</li>
+<li><code>...</code></li>
+<li><code>...</code>之後的參數</li>
+</ul></li>
+<li>專家區
+
+<ul>
+<li>R 的參數都是使用Pass By Value</li>
+<li>參數的複製是採用Copy on Write</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-21" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>請利用<code>+</code>、<code>-</code>、<code>*</code>或<code>/</code>來回答：</h3>
+
+<pre><code class="r"># ubike在捷運市政府站(3號出口)站點於2015-03-01的每小時降雨量
+rainfall1 &lt;- c(0.157,0.432,0.702,0.947,1.129,1.224,1.241,
+  1.218,1.201,1.207,1.225,1.233,1.227,1.218,1.22,1.233,
+  1.244,1.246,1.242,1.242,1.249,1.257,1.258,1.252) 
+# ubike在大鵬華城站點 於2015-03-01的每小時降雨量
+rainfall2 &lt;- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
+  1.102,1.085,1.091,1.108,1.116,1.11,1.102,1.104,1.116,
+  1.127,1.129,1.126,1.125,1.132,1.14,1.141,1.136)
+</code></pre>
+
+<ul>
+<li><code>rainfall1</code>每小時的降雨量和<code>rainfall2</code>的差距</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+<aside class="note">
+  <section>
+    <pre><code class="r">rainfall1 - rainfall2
+</code></pre>
+
+<pre><code>##  [1] 0.116 0.117 0.116 0.117 0.116 0.116
+##  [7] 0.117 0.116 0.116 0.116 0.117 0.117
+## [13] 0.117 0.116 0.116 0.117 0.117 0.117
+## [19] 0.116 0.117 0.117 0.117 0.117 0.116
+</code></pre>
+
+  </section>
+</aside>
+</slide>
+<slide class="segue dark" id="slide-22" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>R 的資料結構</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-23" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>資料的類型</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>數值型變數</li>
+<li>類別型變數</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-24" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 的數值型態：專用於數值型變數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>數值型態
+
+<ul>
+<li>整數(integer) <code>1L</code></li>
+<li>實數(numeric) <code>1.5</code></li>
+</ul></li>
+</ul>
+
+<pre><code class="r">99L;99.5
+</code></pre>
+
+<pre><code>## [1] 99
+</code></pre>
+
+<pre><code>## [1] 99.5
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-25" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 的特殊數值型態</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>時間</li>
+</ul>
+
+<pre><code class="r">Sys.time()
+</code></pre>
+
+<pre><code>## [1] &quot;2015-04-09 00:32:25 CST&quot;
+</code></pre>
+
+<pre><code class="r">ISOdatetime(year = 1970, month = 1, day = 1, 
+            hour = 0, min = 0, sec = 0)
+</code></pre>
+
+<pre><code>## [1] &quot;1970-01-01 CST&quot;
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-26" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 的類別型態</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>字串(character) <code>&quot;1&quot;</code></li>
+<li>類別(factor) <code>factor(1)</code></li>
+</ul>
+
+<pre><code class="r">c(&quot;011&quot;, &quot;012&quot;);factor(c(&quot;信義區&quot;,&quot;大安區&quot;,&quot;信義區&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;011&quot; &quot;012&quot;
+</code></pre>
+
+<pre><code>## [1] 信義區 大安區 信義區
+## Levels: 信義區 大安區
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-27" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>查詢變數的類別</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">x &lt;- 1:3
+class(x)
+</code></pre>
+
+<pre><code>## [1] &quot;integer&quot;
+</code></pre>
+
+<pre><code class="r">x &lt;- factor(c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;))
+class(x)
+</code></pre>
+
+<pre><code>## [1] &quot;factor&quot;
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-28" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>資料型態的轉換 - 將數值轉換為類別</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>直接轉換</h3>
+
+<pre><code class="r">x &lt;- c(1, 2, 3, 2, 3, 2, 1)
+as.character(x) # 字串
+</code></pre>
+
+<pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;2&quot; &quot;3&quot; &quot;2&quot; &quot;1&quot;
+</code></pre>
+
+<pre><code class="r">factor(x) # 類別
+</code></pre>
+
+<pre><code>## [1] 1 2 3 2 3 2 1
+## Levels: 1 2 3
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-29" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>資料型態的轉換 - 將數值轉換為類別</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>分級</h3>
+
+<pre><code class="r">x &lt;- c(75, 81, 82, 76, 91, 92)
+cut(x, breaks = c(70, 80, 90, 100))
+</code></pre>
+
+<pre><code>## [1] (70,80]  (80,90]  (80,90]  (70,80] 
+## [5] (90,100] (90,100]
+## Levels: (70,80] (80,90] (90,100]
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-30" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>資料型態的轉換 - 將字串轉換為數值</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>直接轉換</h3>
+
+<pre><code class="r">x &lt;- c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;2&quot;, &quot;a&quot;)
+as.numeric(x)
+</code></pre>
+
+<pre><code>## Warning: NAs introduced by coercion
+</code></pre>
+
+<pre><code>## [1]  1  2  3  2 NA
+</code></pre>
+
+<ul>
+<li><code>NA</code>代表Not available，代表著<strong>missing value</strong></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-31" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>資料型態的轉換 - 資料清理</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>民國80年至82年的國民生產毛額</h3>
+
+<pre><code style="text-align: center;">
+百萬元
+5,023,763
+5,614,679
+6,205,338
+</code></pre>
+
+<pre><code class="r">gdp &lt;- c(&quot;5,023,763&quot;, &quot;5,614,679&quot;, &quot;6,205,338&quot;)
+as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
+</code></pre>
+
+<pre><code>## [1] 5023763 5614679 6205338
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-32" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R 是向量式</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>所有的資料都是向量</li>
+<li>上述介紹的整數、實數、字串和類別型都是相同型態的向量</li>
+<li><code>list</code>是R 物件的向量</li>
+<li><code>data.frame</code>是長度相同的R 物件的向量</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-33" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2><code>data.frame</code>是最常使用的物件</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li><code>data.frame</code>的概念在各種資料處理的領域非常常見
+
+<ul>
+<li>例：資料庫</li>
+</ul></li>
+<li>（實務經驗）R 使用者會希望能透過前處理把資料轉換為<code>data.frame</code>的型式</li>
+<li>R 提供將資料匯入成<code>data.frame</code>的功能</li>
+<li>R 提供自<code>data.frame</code>開始的各種進階處理功能
+
+<ul>
+<li>資料的整理</li>
+<li>圖形的繪製</li>
+<li>模型的配適與預測</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-34" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請問根據以下的輸出，這份ubike的各欄類別為何？</li>
+</ul>
+
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Wed Apr  8 03:07:29 2015 -->
+
+<table border=1>
+  <tr> <td> date </td> <td> factor </td> <td> tot </td> <td> integer </td> <td> min.bemp </td> <td> integer </td> </tr>
+  <tr> <td> hour </td> <td> integer </td> <td> avg.sbi </td> <td> numeric </td> <td> std.bemp </td> <td> integer </td> </tr>
+  <tr> <td> sno </td> <td> integer </td> <td> max.sbi </td> <td> integer </td> <td> temp </td> <td> numeric </td> </tr>
+  <tr> <td> sarea </td> <td> factor </td> <td> min.sbi </td> <td> integer </td> <td> humidity </td> <td> numeric </td> </tr>
+  <tr> <td> sna </td> <td> factor </td> <td> std.sbi </td> <td> numeric </td> <td> pressure </td> <td> numeric </td> </tr>
+  <tr> <td> lat </td> <td> numeric </td> <td> avg.bemp </td> <td> numeric </td> <td> max.anemo </td> <td> numeric </td> </tr>
+  <tr> <td> lng </td> <td> numeric </td> <td> max.bemp </td> <td> integer </td> <td> rainfall </td> <td> numeric </td> </tr>
+   </table>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-35" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請問根據中文名稱，這份ubike的各欄類別是否合理？</li>
+</ul>
+
+<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+
+<!-- Thu Apr  9 00:32:25 2015 -->
+
+<table border=1>
+  <tr> <td> 日期 </td> <td> factor </td> <td> 總停車格 </td> <td> integer </td> <td> 最小空位數 </td> <td> integer </td> </tr>
+  <tr> <td> 時間 </td> <td> integer </td> <td> 平均車輛數 </td> <td> numeric </td> <td> 空位數標準差 </td> <td> integer </td> </tr>
+  <tr> <td> 場站代號 </td> <td> integer </td> <td> 最大車輛數 </td> <td> integer </td> <td> 平均氣溫 </td> <td> numeric </td> </tr>
+  <tr> <td> 場站區域 </td> <td> factor </td> <td> 最小車輛數 </td> <td> integer </td> <td> 溼度 </td> <td> numeric </td> </tr>
+  <tr> <td> 場站名稱 </td> <td> factor </td> <td> 車輛數標準差 </td> <td> numeric </td> <td> 氣壓 </td> <td> numeric </td> </tr>
+  <tr> <td> 緯度 </td> <td> numeric </td> <td> 平均空位數 </td> <td> numeric </td> <td> 最大風速 </td> <td> numeric </td> </tr>
+  <tr> <td> 經度 </td> <td> numeric </td> <td> 最大空位數 </td> <td> integer </td> <td> 降雨量 </td> <td> numeric </td> </tr>
+   </table>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-36" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>函數會根據資料型態不同而有不同的行為</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>專家區
+
+<ul>
+<li>一種方式是作用在函式內部</li>
+<li>一種是透過S3系統達成，例如：
+
+<ul>
+<li><code>print.factor</code></li>
+<li><code>print.data.frame</code></li>
+<li><code>print.default</code></li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-37" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>資料的讀取</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-38" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>讀取表格檔案 - 0. 先抓取資料</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請至<code>http://data.dsp.im/dataset/youbike-and-weather-data-20150331</code>抓取ubike和天氣的資料</li>
+<li>放置檔案至data資料夾之下（可跟隨講師操作）</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-39" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>讀取表格檔案 - 1. 先檢視資料</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r"># path &lt;- &quot;data/ubikeweatherbig5.csv&quot; 
+path &lt;- &quot;data/ubikeweatherutf8.csv&quot;
+# readLines(path, n = 5)
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-40" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>讀取表格檔案 - 2. 讀取資料</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>先讀取一部分，再讀取全部</li>
+</ul>
+
+<pre><code class="r">ubike &lt;- read.table(path, sep = &quot;,&quot;, header = TRUE, nrows = 100)
+# system.time(ubike &lt;- read.table(path, sep = &quot;,&quot;, header = TRUE))
+# object.size(ubike) # 約86MB
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-41" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>常見的讀取錯誤</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>路徑錯誤</h3>
+
+<pre><code class="r">path &lt;- &quot;wrong_path&quot;
+power &lt;- read.table(file = path, header = TRUE, sep = &quot;,&quot;)
+</code></pre>
+
+<pre><code>## Warning: cannot open file &#39;wrong_path&#39;:
+## No such file or directory
+</code></pre>
+
+<pre><code>## Error: cannot open the connection
+</code></pre>
+
+<ul>
+<li>絕對路徑
+
+<ul>
+<li>確認檔案是否存在</li>
+</ul></li>
+<li>相對路徑
+
+<ul>
+<li>利用<code>getwd</code>了解R 當下的路徑位置</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-42" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>常見的讀取錯誤</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>格式錯誤</h3>
+
+<pre><code class="r">path &lt;- &quot;data/ubikeweatherbig5.csv&quot;
+power &lt;- read.table(file = path, header = TRUE, sep = &quot;1&quot;)
+</code></pre>
+
+<pre><code>## Error: more columns than column names
+</code></pre>
+
+<ul>
+<li>利用其他編輯器確認分隔符號</li>
+<li>確認每列的資料的欄位是正確的
+
+<ul>
+<li>必要時，請用其他文件編輯器校正欲讀取的檔案</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-43" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>常見的讀取錯誤</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>編碼錯誤</h3>
+
+<pre><code class="r">path &lt;- &quot;data/ubikeweatherbig5.csv&quot;
+power &lt;- read.table(file = path, header = TRUE, sep = &quot;,&quot;, nrows = 10)
+</code></pre>
+
+<pre><code>## Error: invalid multibyte string at
+## &#39;&lt;ab&gt;H&lt;b8&gt;q&lt;b0&gt;&lt;cf&gt;&#39;
+</code></pre>
+
+<ul>
+<li>查詢檔案的編碼
+
+<ul>
+<li>常見的中文編碼有<code>UTF-8</code>和<code>BIG-5</code></li>
+<li>讀取時套上<code>file</code>函數指定編碼</li>
+<li>組合<code>readLines</code>、<code>iconv</code>和<code>write</code>來製造符合系統編碼的檔案</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+<aside class="note">
+  <section>
+    <ul>
+<li>專家區</li>
+</ul>
+
+<pre><code class="r">path &lt;- &quot;data/ubikeweatherbig5.csv&quot;
+raw &lt;- read.table(file(path, encoding = &quot;BIG-5&quot;), 
+                  header = TRUE, sep = &quot;,&quot;, 
+                  nrows = 10)
+raw &lt;- readLines(path, n = 10, encoding = &quot;BIG-5&quot;)
+raw2 &lt;- iconv(raw, from = &quot;BIG-5&quot;, to = &quot;UTF-8&quot;)
+write(raw2, &quot;data/ubikeweatherutf8.csv&quot;)
+</code></pre>
+
+  </section>
+</aside>
+</slide>
+<slide class="largecontent" id="slide-44" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>ubike是一種<code>data.frame</code></h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code>## [1] &quot;data.frame&quot;
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-45" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>校正欄位名稱</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">colnames(ubike) &lt;- 
+  c(&quot;日期&quot;, &quot;時間&quot;, &quot;場站代號&quot;, &quot;場站區域&quot;, &quot;場站名稱&quot;, 
+  &quot;緯度&quot;, &quot;經度&quot;, &quot;總停車格&quot;, &quot;平均車輛數&quot;, &quot;最大車輛數&quot;, 
+  &quot;最小車輛數&quot;, &quot;車輛數標準差&quot;, &quot;平均空位數&quot;, &quot;最大空位數&quot;, 
+  &quot;最小空位數&quot;, &quot;空位數標準差&quot;, &quot;平均氣溫&quot;, &quot;溼度&quot;, 
+  &quot;氣壓&quot;, &quot;最大風速&quot;, &quot;降雨量&quot;)
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-46" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>存取資料庫： SQLite</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(RSQLite)
+db.path &lt;- &quot;ubike.db&quot;
+drv &lt;- dbDriver(&quot;SQLite&quot;)
+db &lt;- dbConnect(drv, db.path)
+dbWriteTable(db, &quot;ubike&quot;, head(ubike))
+dbListTables(db)
+dbReadTable(db, &quot;ubike&quot;)
+dbDisconnect(db)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-47" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>未來的學習清單</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>各式資料庫的連接</h3>
+
+<ul>
+<li>SQL Database: <code>RMySQL</code>, <code>RPostgreSQL</code>, <code>ROracle</code>, <code>RJDBC</code>, <code>RODBC</code></li>
+<li>No SQL Database: <code>rmongodb</code>, <code>rredis</code></li>
+<li>讀取XML和網頁資料
+
+<ul>
+<li><code>XML</code>套件和XPath</li>
+</ul></li>
+<li>讀取json資料
+
+<ul>
+<li><code>RJSONIO</code>套件</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-48" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>更擅長整理資料的工具：python</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src='assets/img/dsp-lp7501.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+<p><a href="https://dsp.im/events/e1-basic-data-engineering-course/">https://dsp.im/events/e1-basic-data-engineering-course/</a></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-49" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>資料的選取</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-50" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>布林運算</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> <code>!=</code></li>
+</ul>
+
+<pre><code class="r">1 &gt; 2;1 &lt;= 2
+</code></pre>
+
+<pre><code>## [1] FALSE
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">&quot;A&quot; == &quot;A&quot;;&quot;A&quot; != &quot;A&quot;
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code>## [1] FALSE
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-51" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>向量的選取</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>坐標</h3>
+
+<pre><code class="r">x &lt;- 1:5; x[2:3]
+</code></pre>
+
+<pre><code>## [1] 2 3
+</code></pre>
+
+<h3>布林</h3>
+
+<pre><code class="r">x &lt;- 1:5; x &gt; 3; x[x &gt; 3]
+</code></pre>
+
+<pre><code>## [1] FALSE FALSE FALSE  TRUE  TRUE
+</code></pre>
+
+<pre><code>## [1] 4 5
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-52" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>多重條件</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>且：<code>&amp;</code>
+
+<ul>
+<li><code>布林運算結果1 &amp; 布林運算結果1</code></li>
+</ul></li>
+<li>或：<code>|</code>
+
+<ul>
+<li><code>布林運算結果1 | 布林運算結果1</code></li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-53" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r"># 社會服務業自民國87至民國91年的年度用電量（度）
+power1 &lt;- c(6097059332, 6425887925, 6982579022, 7323992602.53436, 7954239517) 
+# 製造業自民國87至民國91年的年度用電量（度）
+power2 &lt;- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372914.6949) 
+</code></pre>
+
+<ul>
+<li><p>運用index從<code>power1</code>中選取第88年和第90年的年度用電量。結果應該為：</p>
+
+<pre><code>## [1] 6.426e+09 7.324e+09
+</code></pre></li>
+<li><p>運用布林運算自<code>power2</code>中選出，製造業超過社會服務業9.5倍的用電年度的用電量。結果應該為：</p>
+
+<pre><code>## [1] 5.909e+10 6.198e+10 6.738e+10
+</code></pre></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-54" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>表格的選取 - 座標</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">ubike[2, 3]
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<pre><code>##         日期 時間 場站代號
+## 1 2014-12-08   15        1
+## 2 2014-12-08   15        2
+## 3 2014-12-08   15        3
+## 4 2014-12-08   15        4
+## 5 2014-12-08   15        5
+## 6 2014-12-08   15        6
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-55" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>表格的選取 - 欄</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">head(ubike[[&quot;日期&quot;]])
+</code></pre>
+
+<pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
+## [4] 2014-12-08 2014-12-08 2014-12-08
+## Levels: 2014-12-08
+</code></pre>
+
+<pre><code class="r"># head(ubike$日期)
+head(ubike[,1])
+</code></pre>
+
+<pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
+## [4] 2014-12-08 2014-12-08 2014-12-08
+## Levels: 2014-12-08
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-56" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>範例</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ol>
+<li>自<code>ubike</code>選取<code>場站代號</code></li>
+<li>將結果1.輸入至函數<code>unique</code></li>
+<li>利用布林運算，把1.的結果和<code>1</code>比較</li>
+<li>將結果3.輸入至函數<code>which</code></li>
+<li>利用3.和4.的結果選取ubike的列</li>
+</ol>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <pre><code class="r">ans1 &lt;- ubike[[&quot;場站代號&quot;]]
+ans2 &lt;- unique(ans1)
+ans3 &lt;- ans1 == 1
+ans4 &lt;- which(ans3)
+ans5 &lt;- ubike[ans3,]
+ans5 &lt;- ubike[ans4,]
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-57" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請查詢場站代號1099所在的行政區</li>
+<li>請查詢場站代號1099的氣溫
+
+<ol>
+<li>自<code>ubike</code>選取<code>場站代號</code></li>
+<li>利用布林運算，把1.的結果和<code>1099</code>比較</li>
+<li>自<code>ubike</code>選取2.的列之後，用1.的方法選取<code>平均氣溫</code>
+3.1 可利用座標的概同時選取出結果</li>
+</ol></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+<aside class="note">
+  <section>
+    <pre><code class="r">x1 &lt;- ubike[[&quot;場站代號&quot;]]
+x2 &lt;- x1 == 1099
+x3 &lt;- ubike[x2,]
+x3 &lt;- x3[[&quot;平均氣溫&quot;]]
+</code></pre>
+
+  </section>
+</aside>
+</slide>
+<slide class="largecontent" id="slide-58" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>指令的壓縮</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請大家學習「被壓縮的程式碼」該如何解讀
+
+<ul>
+<li>掌握運算符號的運算順序</li>
+</ul></li>
+</ul>
+
+<pre><code class="r">ubike[ubike[[&quot;場站代號&quot;]] == 1 &amp; ubike[[&quot;日期&quot;]] == &quot;2015-03-01&quot;,]
+
+x1 &lt;- ubike[[&quot;場站代號&quot;]] == 1
+x2 &lt;- ubike[[&quot;日期&quot;]] == &quot;2015-03-01&quot;
+x3 &lt;- x1 &amp; x2
+x4 &lt;- ubike[x3,]
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-59" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>2014 年影響R 使用者們最大的套件之一：magrittr</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>壓縮的程式碼不好讀</li>
+<li>展開的程式碼會產生很多暫存變數</li>
+<li>套件<code>magrittr</code>部份解決了這個問題</li>
+</ul>
+
+<pre><code class="r">ans1 &lt;- ubike[[&quot;場站代號&quot;]]
+ans1.1 &lt;- unique(ans1)
+
+unique(ubike[[&quot;場站代號&quot;]])
+
+library(magrittr)
+ubike[[&quot;場站代號&quot;]] %&gt;%
+  unique
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-60" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>2014 年影響R 使用者們最大的套件之一：dplyr</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>讓R 使用者可以用更有彈性的方式來處理資料</li>
+<li>針對<code>data.frame</code>做設計（名稱中的<code>d</code>）</li>
+<li>設計理念
+
+<ul>
+<li>導入資料整理最重要的動作（非常類似SQL）</li>
+<li>快</li>
+<li>支援異質資料源（<code>data.frame</code>或資料庫中的表格）</li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-61" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>學習dplyr的官方方式：<code>vignette</code></h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>更詳細的dplyr介紹可以閱讀dplyr的小論文</li>
+<li>R 的開發者會針對一個主題撰寫小論文做介紹</li>
+<li>讓我們先透過vignette來簡易學習，之後的範例中再做細部解釋</li>
+</ul>
+
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <ul>
+<li><code>filter</code></li>
+<li><code>select</code></li>
+<li><code>mutate</code></li>
+<li><code>arrange</code></li>
+<li><code>group_by</code> + <code>summarise</code></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><center><img src='assets/img/R_ETL_Fn1.png' style='max-width: 100%;max-height: 100%'></img></center>
+出處：<a href="https://www.youtube.com/watch?v=JD1eDxxrur0">資料科學愛好者年會資料分析上手課程：ETL1</a></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-62" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>資料的探索</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-63" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>探索一個變數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>量化數據</h3>
+
+<ul>
+<li>敘述統計量：<code>mean</code>、<code>sd</code>、<code>median</code></li>
+</ul>
+
+<h3>質化數據</h3>
+
+<ul>
+<li>分佈表格：<code>table</code></li>
+<li>眾數：<code>table</code> + <code>sort</code></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-64" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>利用說明文件了解函數內容</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>範例：學習<code>mean</code>的用法</h3>
+
+<ul>
+<li><p>閱讀說明文件</p>
+
+<pre><code class="r">?mean
+</code></pre></li>
+<li><p>嘗試範例</p>
+
+<pre><code class="r">example(mean)
+</code></pre></li>
+<li><p>自動完成</p>
+
+<ul>
+<li>在命令列輸入<code>mena(</code>後按下<code>tab</code></li>
+</ul></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-65" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>探索一個量化變數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>挑戰：學習<code>sd</code>的用法</h3>
+
+<ul>
+<li>透過<code>?sd</code>嘗試自學標準差的用法</li>
+<li>選取<code>場站代號</code>為1和<code>日期</code>為&quot;2015-03-01&quot;的資料</li>
+<li>計算<code>捷運市政府站(3號出口)</code>在<code>&quot;2015-03-01&quot;</code>的<code>降雨量</code>的標準差</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+<aside class="note">
+  <section>
+    <pre><code class="r">x1 &lt;- ubike[[&quot;場站代號&quot;]] == 1
+x2 &lt;- ubike[[&quot;日期&quot;]] == &quot;2015-03-01&quot;
+ubike[x1 &amp; x2, &quot;降雨量&quot;]
+sd(ubike[x1 &amp; x2, &quot;降雨量&quot;])
+
+library(dplyr)
+sd(select(
+  filter(ubike, 場站代號 == 1, 日期 == &quot;2015-03-01&quot;),
+  降雨量)[[&quot;降雨量&quot;]])
+
+filter(ubike, 場站代號 == 1, 日期 == &quot;2015-03-01&quot;) %&gt;%
+  select(降雨量) %&gt;%
+  extract2(&quot;降雨量&quot;) %&gt;%
+  sd
+</code></pre>
+
+  </section>
+</aside>
+</slide>
+<slide class="largecontent" id="slide-66" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>各行政區的站點數：學習<code>group_by</code></h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><img src='assets/img/R_ETL_Fn2.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+<ul>
+<li>個數：<code>length</code></li>
+<li>平均：<code>mean</code>、標準差：<code>sd</code>、中位數：<code>median</code></li>
+<li>可能的值的個數：<code>length(unique)</code></li>
+<li>可能的值：<code>paste(unique, collapse = &quot;,&quot;)</code></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <h3>每日的平均雨量</h3>
+
+<pre><code class="r">group_by(ubike, 日期) %&gt;%
+  summarise(平均降雨量 = mean(降雨量))
+</code></pre>
+
+<h3>各場站區域的站點數</h3>
+
+<pre><code class="r">group_by(ubike, 場站區域) %&gt;%
+  summarise(站點數 = 
+    length(unique(場站代號))) %&gt;%
+  arrange(站點數)
+</code></pre>
+
+<h3>各場站區域的站點數</h3>
+
+<pre><code class="r">group_by(ubike, 場站區域) %&gt;%
+  summarise(站點代號清單 = 
+    paste(unique(場站代號), 
+          collapse = &quot;,&quot;))
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-67" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>探索一個質化變數</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ol>
+<li>利用<code>table</code>列出所有的<code>場站名稱</code>出現的次數</li>
+</ol>
+
+</article>
+<!-- Presenter Notes -->
+<aside class="note">
+  <section>
+    <pre><code class="r">head(sort(table(ubike[[&quot;場站名稱&quot;]])))
+
+table(ubike[[&quot;場站名稱&quot;]]) %&gt;%
+  sort %&gt;%
+  head
+</code></pre>
+
+  </section>
+</aside>
+</slide>
+<slide class="largecontent" id="slide-68" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>探索變數間的關係</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li><code>ftable</code>：質化 v.s. 質化</li>
+<li>bar chart：質化 v.s. 量化</li>
+<li>scatter plot： 量化 v.s. 量化</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-69" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>探索質化變數與質化變數的關係</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">?ftable
+example(ftable)
+</code></pre>
+
+<pre><code>ftable&gt; ## Start with a contingency table.
+ftable&gt; ftable(Titanic, row.vars = 1:3)
+                   Survived  No Yes
+Class Sex    Age                   
+1st   Male   Child            0   5
+             Adult          118  57
+      Female Child            0   1
+             Adult            4 140
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-70" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰：</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ol>
+<li>選取場站區域為<code>信義區</code>且日期為<code>&quot;2015-03-01&quot;</code>的列</li>
+<li>選取欄<code>平均車輛數</code>與<code>總停車格</code></li>
+<li>利用布林運算式計算&quot;<code>平均車輛數</code>&quot;是否超過<code>總停車格</code>的一半
+
+<ul>
+<li>命名為<code>空位較多</code></li>
+</ul></li>
+<li>選取欄<code>時間</code></li>
+<li>比較<code>時間</code>和<code>空位較多</code>的交互關係</li>
+</ol>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-71" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>小挑戰（參考答案）</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code>## Error: number of columns of matrices
+## must match (see arg 3)
+</code></pre>
+
+<pre><code>## Error: number of columns of matrices
+## must match (see arg 3)
+</code></pre>
+
+<pre><code>## Error: number of columns of matrices
+## must match (see arg 3)
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="dark segue" id="slide-72" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>ggplot</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-73" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>繪圖之前的整理資料：質化 v.s. 量化</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">data(power, package = &quot;DSP2014R&quot;)
+</code></pre>
+
+<pre><code>## Error: there is no package called
+## &#39;DSP2014R&#39;
+</code></pre>
+
+<pre><code class="r"># unique(power$label)
+label &lt;- power$label
+</code></pre>
+
+<pre><code>## Error: object of type &#39;closure&#39; is not
+## subsettable
+</code></pre>
+
+<pre><code class="r">label.level1 &lt;- label %in% paste0(LETTERS, &quot;.&quot;)
+</code></pre>
+
+<pre><code>## Error: &#39;match&#39; requires vector
+## arguments
+</code></pre>
+
+<pre><code class="r">year.100 &lt;- power[[&quot;year&quot;]] == 100
+</code></pre>
+
+<pre><code>## Error: object of type &#39;closure&#39; is not
+## subsettable
+</code></pre>
+
+<pre><code class="r">power.level1.100 &lt;- power[label.level1 &amp; year.100,]
+</code></pre>
+
+<pre><code>## Error: object &#39;label.level1&#39; not found
+</code></pre>
+
+<ul>
+<li>同時選取字母開頭<b>且</b>年度為100的資料</li>
+<li>學習功能函數和內定變數: <code>unique</code>, <code>%in%</code>, <code>paste0</code>, <code>LETTERS</code></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-74" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>barplot</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">barplot(height = power.level1.100$power, names.arg = power.level1.100$label)
+</code></pre>
+
+<pre><code>## Error: object &#39;power.level1.100&#39; not
+## found
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-75" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>繪圖之前的整理資料：量化 v.s. 量化</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">data(power, package = &quot;DSP2014R&quot;)
+</code></pre>
+
+<pre><code>## Error: there is no package called
+## &#39;DSP2014R&#39;
+</code></pre>
+
+<pre><code class="r">label &lt;- power$label
+</code></pre>
+
+<pre><code>## Error: object of type &#39;closure&#39; is not
+## subsettable
+</code></pre>
+
+<pre><code class="r">power.91 &lt;- power[label == &quot;91&quot;,]
+</code></pre>
+
+<pre><code>## Error: comparison (1) is possible only
+## for atomic and list types
+</code></pre>
+
+<ul>
+<li>選取<code>label</code>為<code>&quot;91&quot;</code>的列</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-76" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>scatter plot</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">plot(power ~ year, power.91)
+</code></pre>
+
+<pre><code>## Error: object &#39;power.91&#39; not found
+</code></pre>
+
+<ul>
+<li>原因在x軸，結果在y軸</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-77" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>圖形的美化</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>Maker精神：雕圖</h3>
+
+<ul>
+<li>學習<code>par</code>中的參數</li>
+<li>複刻別人的code</li>
+</ul>
+
+<h3>站在巨人的肩膀上</h3>
+
+<ul>
+<li>使用如ggplot2或ggvis套件</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-78" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2><a href="http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/">Watercolor Plot</a></h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <p><center>
+<img src="assets/fig/cars.png" alt="plot of chunk cars"> 
+</center></p>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <p><center></p>
+
+<pre><code>## Error: cannot coerce type &#39;closure&#39; to
+## vector of type &#39;character&#39;
+</code></pre>
+
+<pre><code>## Error: could not find function &quot;vwReg&quot;
+</code></pre>
+
+<p></center></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-79" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>清楚的畫圖</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>範圍：<code>xlim</code>, <code>ylim</code></li>
+<li>標題：<code>main</code>, <code>xlab</code>, <code>ylab</code></li>
+<li>顏色、圖樣：<code>color</code>, <code>pch</code></li>
+<li>坐標軸：<code>axis</code></li>
+<li>圖說：<code>legends</code></li>
+<li>數學符號：<code>help(&quot;plotmath&quot;)</code></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-80" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>學習圖的參數 - 以pch為例</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">help(&quot;pch&quot;)
+example(pch)
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-81" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r"># par(family = &quot;STKaiti&quot;) # for OS X
+plot(power ~ year, power.91, main = &quot;歷年公務機構及國訪事業合計用電量&quot;,
+     xlab = &quot;年(民國)&quot;, ylab = &quot;用電量（十億度）&quot;, yaxt = &#39;n&#39;, pch = 2)
+axis(2, at = c(2, 2.2, 2.4, 2.6) * 1e9, label = c(&quot;2.0&quot;, &quot;2.2&quot;, &quot;2.4&quot;, &quot;2.6&quot;))
+</code></pre>
+
+<pre><code>## Error: object &#39;power.91&#39; not found
+</code></pre>
+
+<pre><code>## Error: plot.new has not been called yet
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="dark segue" id="slide-82" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>圖表的輸出</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-83" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>輸出圖片</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>Rstudio UI</li>
+<li><code>savePlot</code></li>
+<li><code>bmp</code>、<code>png</code>、<code>jpeg</code>或<code>tiff</code></li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-84" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>輸出表格</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li><code>write.csv</code></li>
+<li><code>xtable</code>套件</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-85" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>R markdown 火力展示</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>請見現場live demo</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="segue dark" id="slide-86" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>更強大的繪圖功能示例</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-87" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>ggplot2</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+  <pre><code>## Error: object &#39;power.91&#39; not found
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;' class='centered'>
+  <pre><code>## Error: object &#39;power.91&#39; not found
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-88" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>shiny</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><a href="http://shiny.rstudio.com/gallery/">http://shiny.rstudio.com/gallery/</a></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="dark segue" id="slide-89" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <hgroup>
+    <h2>總結</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-90" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>今天的目標</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<h3>環境設定</h3>
+
+<ul>
+<li>建立可以使用R 的環境</li>
+<li>了解R 的使用界面</li>
+</ul>
+
+<h3>學習R 語言</h3>
+
+<ul>
+<li>透過實際的範例學習R 語言
+
+<ul>
+<li>讀取資料</li>
+<li>選取資料</li>
+<li>敘述統計量與視覺化</li>
+</ul></li>
+<li>利用實例來傳授學習的心法</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-91" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>掌握心法後，如何自行利用R 解決問題</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>了解自己的需求</li>
+<li>詢問關鍵字與函數
+
+<ul>
+<li>歡迎來信 <a href="mailto:wush978@gmail.com">wush978@gmail.com</a> 或其他教師</li>
+<li>多多交流
+
+<ul>
+<li><a href="http://www.meetup.com/Taiwan-R">Taiwan R User Group</a>，mailing list: <a href="mailto:Taiwan-useR-Group-list@meetup.com">Taiwan-useR-Group-list@meetup.com</a></li>
+<li>ptt R_Language版</li>
+<li><a href="https://groups.google.com/forum/#!forum/taiwanruser">R軟體使用者論壇</a></li>
+</ul></li>
+<li><code>sos</code>套件，請見Demo</li>
+</ul></li>
+<li>利用今日習得的心法掌握函數用法</li>
+</ul>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-92" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>你喜歡R 嗎？</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<ul>
+<li>R 是由一群來自世界上的志工貢獻而成的</li>
+<li>你覺得R 有不好用的地方嗎？
+
+<ul>
+<li>歡迎聯絡我，讓我們一起來貢獻，改進R 的使用體驗</li>
+</ul></li>
+</ul>
+
+<p><img src="assets/img/Rlogo.jpg" width="225" height="171"/></p>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-93" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>DSP 提供的未來課程</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-94" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>Q&amp;A</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="" id="slide-95" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='關於講師'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='今天的目標'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='工欲善其事，必先利其器'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Rstudio 界面'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='熟悉R 和Rstudio的界面'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='熟悉R 和Rstudio的界面 - 請你跟我這樣做'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='熟悉R 和Rstudio的界面 - 請你跟我這樣做'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='熟悉R 和Rstudio的界面 - 請你跟我這樣做'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='R 的擴充功能'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='<a href="http://cran.r-project.org/web/views/">CRAN Task Views</a>'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='套件的安裝'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='小挑戰'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='讓我們來說R 語'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='敘述句(expression)'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='註解'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='敘述句與數值運算'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='變數與賦值 <code>&lt;-</code>或<code>=</code>'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='向量'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='呼叫函數'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='函數與參數'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='小挑戰'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='R 的資料結構'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='資料的類型'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='R 的數值型態：專用於數值型變數'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='R 的特殊數值型態'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='R 的類別型態'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='查詢變數的類別'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='資料型態的轉換 - 將數值轉換為類別'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='資料型態的轉換 - 將數值轉換為類別'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='資料型態的轉換 - 將字串轉換為數值'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='資料型態的轉換 - 資料清理'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='R 是向量式'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='<code>data.frame</code>是最常使用的物件'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='小挑戰'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='小挑戰'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='函數會根據資料型態不同而有不同的行為'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='資料的讀取'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='讀取表格檔案 - 0. 先抓取資料'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='讀取表格檔案 - 1. 先檢視資料'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='讀取表格檔案 - 2. 讀取資料'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='常見的讀取錯誤'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='常見的讀取錯誤'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='常見的讀取錯誤'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='ubike是一種<code>data.frame</code>'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='校正欄位名稱'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='存取資料庫： SQLite'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='未來的學習清單'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='更擅長整理資料的工具：python'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='資料的選取'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='布林運算'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='向量的選取'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='多重條件'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='小挑戰'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='表格的選取 - 座標'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='表格的選取 - 欄'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='範例'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='小挑戰'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='指令的壓縮'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='2014 年影響R 使用者們最大的套件之一：magrittr'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='2014 年影響R 使用者們最大的套件之一：dplyr'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='學習dplyr的官方方式：<code>vignette</code>'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='資料的探索'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='探索一個變數'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='利用說明文件了解函數內容'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='探索一個量化變數'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='各行政區的站點數：學習<code>group_by</code>'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='探索一個質化變數'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='探索變數間的關係'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='探索質化變數與質化變數的關係'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='小挑戰：'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='小挑戰（參考答案）'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='ggplot'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='繪圖之前的整理資料：質化 v.s. 量化'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='barplot'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='繪圖之前的整理資料：量化 v.s. 量化'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='scatter plot'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='圖形的美化'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='<a href="http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/">Watercolor Plot</a>'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='清楚的畫圖'>
+         79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='學習圖的參數 - 以pch為例'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title=''>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='圖表的輸出'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='輸出圖片'>
+         83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='輸出表格'>
+         84
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=85 title='R markdown 火力展示'>
+         85
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=86 title='更強大的繪圖功能示例'>
+         86
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=87 title='ggplot2'>
+         87
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=88 title='shiny'>
+         88
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=89 title='總結'>
+         89
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=90 title='今天的目標'>
+         90
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=91 title='掌握心法後，如何自行利用R 解決問題'>
+         91
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=92 title='你喜歡R 嗎？'>
+         92
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=93 title='DSP 提供的未來課程'>
+         93
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=94 title='Q&amp;A'>
+         94
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=95 title=''>
+         95
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

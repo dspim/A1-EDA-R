@@ -19,19 +19,24 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(xtable)
   library(magrittr)
+  library(data.table)
+  library(broom)
+  library(dplyr)
 })
 opts_chunk$set(echo = FALSE, cache = FALSE, cache.path = ".cache-EDA-R/")
+options(width = 40)
 fit100 <- fig <- function(path, size = 100) {
   sprintf("<img src='assets/img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
           path, size, size)
 }
 fit50 <- function(fname) fit100(fname, 50)
-options(width = 40)
+sys_name <- Sys.info()["sysname"] %>% tolower
+sys_encode <- c("utf8", "utf8", "big5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
 ```
 
 ```{r loadubike, echo = FALSE, cache=TRUE}
 ubike_path <- sprintf("data/ubikeweather%s.csv", sys_encode)
-ubike <- fread(ubike_path, header = TRUE, showProgress = interactive(), data.table = FALSE)
+ubike <- read.table(ubike_path, sep = ",", header = TRUE)
 # ubike <- readRDS("data/ubike-weather-utf8.rds")
 ```
 
@@ -148,7 +153,7 @@ install.packages("pkg-name", repos = "來源")
 
 ### 套件安裝
 
-- 利用UI安裝`ggplot2`、`magrittr`套件
+- 利用UI安裝`RSQLite`、`ggplot2`、`magrittr`和`dplyr`套件
 
 --- .dark .segue
 
@@ -415,37 +420,81 @@ gdp <- c("5,023,763", "5,614,679", "6,205,338")
 as.numeric(gsub(",", "", gdp))
 ```
 
----
+--- &vcenter .largecontent
+
+## R 是向量式
+
+- 所有的資料都是向量
+- 上述介紹的整數、實數、字串和類別型都是相同型態的向量
+- `list`是R 物件的向量
+- `data.frame`是長度相同的R 物件的向量
+
+--- &vcenter .largecontent
+
+## `data.frame`是最常使用的物件
+
+- `data.frame`的概念在各種資料處理的領域非常常見
+    - 例：資料庫
+- （實務經驗）R 使用者會希望能透過前處理把資料轉換為`data.frame`的型式
+- R 提供將資料匯入成`data.frame`的功能
+- R 提供自`data.frame`開始的各種進階處理功能
+    - 資料的整理
+    - 圖形的繪製
+    - 模型的配適與預測
+
+--- &vcenter .largecontent
 
 ## 小挑戰
 
-請問根據以下的輸出，這份ubike的各欄類別為何？
+- 請問根據以下的輸出，這份ubike的各欄類別為何？
 
-```{r ubike.type, echo = FALSE, results='asis', dependson="loadubike"}
+```{r ubike.type, echo = FALSE, results='asis', dependson="loadubike", cache=TRUE}
 ubike.type <- sapply(ubike, class)
 split(ubike.type, rep(1:3, each = 7)) %>%
   lapply(function(x) {
     tmp <- as.data.frame(x)
     colnames(tmp) <- "class"
     tmp$name <- rownames(tmp)
-    tmp
+    tmp[2:1]
   }) %>%
   do.call(what = cbind) %>%
-  set_colnames(rep(c("class", "name"), 3)) %>%
-  xtable %>% print.xtable(type = "html", include.colnames = FALSE)
+  set_colnames(rep(c("name", "class"), 3)) %>%
+  xtable %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
 ```
 
 --- &vcenter .largecontent
 
-## `summary` 指令
+## 小挑戰
 
-```{r summary, echo = TRUE}
-data(power, package = "DSP2014R")
-summary(power)
+- 請問根據中文名稱，這份ubike的各欄類別是否合理？
+
+```{r ubike.cname, echo = FALSE, results = 'asis', dependson="ubike.type"}
+ubike.cname.raw <- read.table("ubike-cname.csv", sep = "\t", header = FALSE, 
+                              row.names = c("cname", "name"), stringsAsFactors = FALSE) 
+ubike.cname <- ubike.cname.raw[1,] %>% unlist %>% set_names(ubike.cname.raw[2,] %>% unlist)
+ubike.ctype <- ubike.type %>% set_names(ubike.cname[names(ubike.type)])
+split(ubike.ctype, rep(1:3, each = 7)) %>%
+  lapply(function(x) {
+    tmp <- as.data.frame(x)
+    colnames(tmp) <- "class"
+    tmp$name <- rownames(tmp)
+    tmp[2:1]
+  }) %>%
+  do.call(what = cbind) %>%
+  set_colnames(rep(c("name", "class"), 3)) %>%
+  xtable %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
 ```
 
-- 根據資料型態的不同，函數的輸出結果也會不同
+--- &vcenter .largecontent
 
+## 函數會根據資料型態不同而有不同的行為
+
+- 專家區
+    - 一種方式是作用在函式內部
+    - 一種是透過S3系統達成，例如：
+        - `print.factor`
+        - `print.data.frame`
+        - `print.default`
 
 --- .segue .dark
 
@@ -453,26 +502,32 @@ summary(power)
 
 --- &vcenter .largecontent
 
-## 讀取整理過後的表格檔案
+## 讀取表格檔案 - 0. 先抓取資料
 
+- 請至`http://data.dsp.im/dataset/youbike-and-weather-data-20150331`抓取ubike和天氣的資料
+- 放置檔案至data資料夾之下（可跟隨講師操作）
+
+--- &vcenter .largecontent
+
+## 讀取表格檔案 - 1. 先檢視資料
+
+```{r read.lines, echo = TRUE}
+# path <- "data/ubikeweatherbig5.csv" 
+path <- "data/ubikeweatherutf8.csv"
+# readLines(path, n = 5)
 ```
-"產業代號（第六版）","產業名稱","年度（民國）","用電量（度）"
-"","農藝及園藝",87,113584956
-"011","農藝及園藝",88,122010866
-"011","農藝及園藝",89,139061996
-"011","農藝及園藝",90,143103985.905191
+
+--- &vcenter .largecontent
+
+## 讀取表格檔案 - 2. 讀取資料
+
+- 先讀取一部分，再讀取全部
+
+```{r read.table, echo = TRUE, results = "none"}
+ubike <- read.table(path, sep = ",", header = TRUE, nrows = 100)
+# system.time(ubike <- read.table(path, sep = ",", header = TRUE))
+# object.size(ubike) # 約86MB
 ```
-
-```{r read.table, echo = TRUE}
-path <- system.file("opendata/power/power.csv", package = "DSP2014R");path
-src <- readLines(con = path, n = 5)
-power <- read.table(file = path, header = TRUE, sep = ",");head(power)
-```
-
-*** =pnotes
-
-- 注意：有些參數是字串，有些參數是數值
-- TRUE/FALSE代表布林值
 
 --- &vcenter .largecontent
 
@@ -497,7 +552,7 @@ power <- read.table(file = path, header = TRUE, sep = ",")
 ### 格式錯誤
 
 ```{r read.table_wrong_format, echo = TRUE}
-path <- system.file("opendata/power/power.csv", package = "DSP2014R")
+path <- "data/ubikeweatherbig5.csv"
 power <- read.table(file = path, header = TRUE, sep = "1")
 ```
 
@@ -511,87 +566,68 @@ power <- read.table(file = path, header = TRUE, sep = "1")
 
 ### 編碼錯誤
 
-```{r read.table_wrong_encoding, echo = TRUE}
-path <- switch(Sys.info()[["sysname"]], 
-       system.file("opendata/power/power-big5.csv", package = "DSP2014R"))
-power <- read.table(file = path, header = TRUE, sep = ",")
+```{r read.table_wrong_encoding, echo = TRUE, cache=TRUE}
+path <- "data/ubikeweatherbig5.csv"
+power <- read.table(file = path, header = TRUE, sep = ",", nrows = 10)
 ```
 
 - 查詢檔案的編碼
-    - 常見的中文編碼有`utf-8`和`big5`
-    - 利用其他工具做編碼的轉換(推薦, Windows 上建議安裝[Rtools](http://cran.csie.ntu.edu.tw/bin/windows/))，可使用`iconv`和`file`兩個工具
-    - 讀取時套上`file`函數指定編碼（較不推薦）
+    - 常見的中文編碼有`UTF-8`和`BIG-5`
+    - 讀取時套上`file`函數指定編碼
+    - 組合`readLines`、`iconv`和`write`來製造符合系統編碼的檔案
 
 *** =pnotes
 
-- `help("switch")`
-    - 根據第一個參數的結果，決定後續的行為
-
-```{r file_encoding, echo = TRUE}
-path <- switch(Sys.info()[["sysname"]], 
-       system.file("opendata/power/power-big5.csv", 
-                   package = "DSP2014R"))
-encoding <- switch(Sys.info()[["sysname"]], 
-       "big5")
-power <- read.table(file = file(path, encoding = encoding), 
-                    header = TRUE, sep = ",")
+- 專家區
+```{r, echo=TRUE, eval=FALSE}
+path <- "data/ubikeweatherbig5.csv"
+raw <- read.table(file(path, encoding = "BIG-5"), 
+                  header = TRUE, sep = ",", 
+                  nrows = 10)
+raw <- readLines(path, n = 10, encoding = "BIG-5")
+raw2 <- iconv(raw, from = "BIG-5", to = "UTF-8")
+write(raw2, "data/ubikeweatherutf8.csv")
 ```
 
 --- &vcenter .largecontent
 
-## 小練習
+## ubike是一種`data.frame`
 
-### 請問這個錯誤訊息代表哪一種讀取錯誤？
-
-```
-Error: more columns than column names
+```{r}
+class(ubike)
 ```
 
 --- &vcenter .largecontent
 
 ## 校正欄位名稱
 
-```{r edit, eval = FALSE, echo = TRUE}
-power2 <- edit(power)
-colnames(power2)
-colnames(power2) <- c("label", "name", "year", "power")
+```{r c.ubike, eval = TRUE, echo = TRUE, cache = TRUE, results='hide'}
+colnames(ubike) <- 
+  c("日期", "時間", "場站代號", "場站區域", "場站名稱", 
+  "緯度", "經度", "總停車格", "平均車輛數", "最大車輛數", 
+  "最小車輛數", "車輛數標準差", "平均空位數", "最大空位數", 
+  "最小空位數", "空位數標準差", "平均氣溫", "溼度", 
+  "氣壓", "最大風速", "降雨量")
 ```
 
---- &vcenter .largecontent
+--- .largecontent
 
-## 範例
+## 存取資料庫： SQLite
 
-- 自[UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)
-    1. 下載資料
-    1. 讀取資料
-    1. 校正欄位名稱
+```{r, include=FALSE}
+if (file.exists("ubike.db")) file.remove("ubike.db")
+```
 
---- &vcenter .largecontent
-
-## 小練習
-
-### 請自[UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)練習其他資料
-
---- &vcenter
-
-## 讀取資料庫
-
-### SQLite
-
-```{r dbi, echo = TRUE}
+```{r dbi, echo = TRUE, warning = FALSE, cache = TRUE, results='hide'}
 library(RSQLite)
-path <- system.file("sqlite/example.db", package = "DSP2014R")
-db <- dbConnect("SQLite", path)
+db.path <- "ubike.db"
+drv <- dbDriver("SQLite")
+db <- dbConnect(drv, db.path)
+dbWriteTable(db, "ubike", head(ubike))
 dbListTables(db)
-power <- dbReadTable(db, "power")
+dbReadTable(db, "ubike")
 dbDisconnect(db)
 ```
-
---- &vcenter .largecontent
-
-## 小挑戰
-
-### 自範例的資料庫中讀取"gdp"表格
 
 --- &vcenter .largecontent
 
@@ -606,11 +642,19 @@ dbDisconnect(db)
 - 讀取json資料
     - `RJSONIO`套件
 
+--- &vcenter .largecontent
+
+## 更擅長整理資料的工具：python
+
+`r fig("dsp-lp7501.png")`
+
+<https://dsp.im/events/e1-basic-data-engineering-course/>
+
 --- .segue .dark
 
 ## 資料的選取
 
---- &vcenter .largecontent
+--- .largecontent
 
 ## 布林運算
 
@@ -621,7 +665,7 @@ dbDisconnect(db)
 "A" == "A";"A" != "A"
 ```
 
---- 
+--- .largecontent
 
 ## 向量的選取
 
@@ -641,13 +685,10 @@ x <- 1:5; x > 3; x[x > 3]
 
 ## 多重條件
 
-### 且：`&`
-
-`布林運算結果1 & 布林運算結果1`
-
-### 或：`|`
-
-`布林運算結果1 | 布林運算結果1`
+- 且：`&`
+    - `布林運算結果1 & 布林運算結果1`
+- 或：`|`
+    - `布林運算結果1 | 布林運算結果1`
 
 --- &vcenter .largecontent
 
@@ -673,64 +714,69 @@ power2 <- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372914
 
 --- &vcenter .largecontent
 
-## 表格的選取
+## 表格的選取 - 座標
 
-```{r select_table, echo = TRUE}
-data(power, package = "DSP2014R")
-power[1, 2]
+```{r select_table, echo = TRUE, dependson="c.ubike"}
+ubike[2, 3]
 ```
 
-`r fig("table_selection.png", 100)`
+```{r select_table_demo, echo = FALSE, results='markup', dependson="c.ubike"}
+ubike[1:6, 1:3]
+```
+
 
 --- &vcenter .largecontent
 
-## 欄的選取
+## 表格的選取 - 欄
 
-```{r select_column, echo = TRUE}
-head(power)
-head(power[["name"]]) # head(power$name)
+```{r select_column, echo = TRUE, dependson="c.ubike"}
+head(ubike[["日期"]]) 
+# head(ubike$日期)
+head(ubike[,1])
 ```
 
---- &vcenter .largecontent
+--- &twocol .largecontent
 
 ## 範例
 
-### 選取資訊服務業的歷年用電資料
+*** =left
 
-1. 自`power`選取`name`
-2. 利用布林運算，把1.的結果和`"資訊服務業"`比較
-3. 利用2.的結果選取power的列
+1. 自`ubike`選取`場站代號`
+2. 將結果1.輸入至函數`unique`
+3. 利用布林運算，把1.的結果和`1`比較
+4. 將結果3.輸入至函數`which`
+5. 利用3.和4.的結果選取ubike的列
 
-```{r select_row_example, echo = TRUE}
-x1 <- power[["name"]] # power$name
-x2 <- x1 == "資訊服務業"
-x3 <- power[x2,]
-head(x3)
+
+*** =right
+
+```{r select_row_example, echo = TRUE, results = "hide"}
+ans1 <- ubike[["場站代號"]]
+ans2 <- unique(ans1)
+ans3 <- ans1 == 1
+ans4 <- which(ans3)
+ans5 <- ubike[ans3,]
+ans5 <- ubike[ans4,]
 ```
 
----
+--- &vcenter .largecontent
 
 ## 小挑戰
 
-### 請選取「資訊服務業」第89年度的用電量
-
-1. 自`power`選取`name`
-2. 利用布林運算，把1.的結果和`"資訊服務業"`比較
-3. 自`power`選取`year`
-4. 利用布林運算，把3.的結果和89比較
-5. 利用布林運算，取得同時滿足2.和4.的結果（且）
-6. 利用5.的結果選取power的列
+- 請查詢場站代號1099所在的行政區
+- 請查詢場站代號1099的氣溫
+    1. 自`ubike`選取`場站代號`
+    2. 利用布林運算，把1.的結果和`1099`比較
+    3. 自`ubike`選取2.的列之後，用1.的方法選取`平均氣溫`
+        3.1 可利用座標的概同時選取出結果
 
 *** =pnotes
 
-```{r, echo = TRUE, eval = FALSE}
-x1 <- power[["name"]]
-x2 <- x1 == "資訊服務業"
-x3 <- power[["year"]]
-x4 <- x3 == 89
-x5 <- x2 & x4
-x6 <- power[x5,]
-x6
+```{r, echo = TRUE, results='hide'}
+x1 <- ubike[["場站代號"]]
+x2 <- x1 == 1099
+x3 <- ubike[x2,]
+x3 <- x3[["平均氣溫"]]
 ```
 
 --- &vcenter .largecontent
@@ -740,9 +786,66 @@ x6
 - 請大家學習「被壓縮的程式碼」該如何解讀
     - 掌握運算符號的運算順序
 
-```{r}
-power[power$name == "資訊服務業" & power$year == 89,]
+```{r, echo = TRUE, results='hide'}
+ubike[ubike[["場站代號"]] == 1 & ubike[["日期"]] == "2015-03-01",]
+
+x1 <- ubike[["場站代號"]] == 1
+x2 <- ubike[["日期"]] == "2015-03-01"
+x3 <- x1 & x2
+x4 <- ubike[x3,]
 ```
+
+--- &vcenter .largecontent
+
+## 2014 年影響R 使用者們最大的套件之一：magrittr
+
+- 壓縮的程式碼不好讀
+- 展開的程式碼會產生很多暫存變數
+- 套件`magrittr`部份解決了這個問題
+
+```{r magrittr, echo = TRUE, results='hide'}
+
+ans1 <- ubike[["場站代號"]]
+ans1.1 <- unique(ans1)
+
+unique(ubike[["場站代號"]])
+
+library(magrittr)
+ubike[["場站代號"]] %>%
+  unique
+```
+
+--- &vcenter .largecontent
+
+## 2014 年影響R 使用者們最大的套件之一：dplyr
+
+- 讓R 使用者可以用更有彈性的方式來處理資料
+- 針對`data.frame`做設計（名稱中的`d`）
+- 設計理念
+    - 導入資料整理最重要的動作（非常類似SQL）
+    - 快
+    - 支援異質資料源（`data.frame`或資料庫中的表格）
+
+--- &twocol .largecontent
+
+## 學習dplyr的官方方式：`vignette`
+
+- 更詳細的dplyr介紹可以閱讀dplyr的小論文
+- R 的開發者會針對一個主題撰寫小論文做介紹
+- 讓我們先透過vignette來簡易學習，之後的範例中再做細部解釋
+
+*** =left
+
+- `filter`
+- `select`
+- `mutate`
+- `arrange`
+- `group_by` + `summarise`
+
+*** =right
+
+<center>`r fig("R_ETL_Fn1.png")`</center>
+出處：[資料科學愛好者年會資料分析上手課程：ETL1](https://www.youtube.com/watch?v=JD1eDxxrur0)
 
 --- .segue .dark
 
@@ -754,14 +857,14 @@ power[power$name == "資訊服務業" & power$year == 89,]
 
 ### 量化數據
 
-- 敘述統計量：`mean`、`sd`、`median`、`quantile`
-- 繪圖看分佈：`density`
+- 敘述統計量：`mean`、`sd`、`median`
 
 ### 質化數據
 
 - 分佈表格：`table`
+- 眾數：`table` + `sort`
 
---- &vcenter 
+--- &vcenter .largecontent
 
 ## 利用說明文件了解函數內容
 
@@ -784,43 +887,83 @@ power[power$name == "資訊服務業" & power$year == 89,]
 
 ### 挑戰：學習`sd`的用法
 
---- &vcenter .largecontent 
-
-## 探索一個量化變數
-
-### 挑戰：選取<b>出版業合計</b>的歷年用電消耗量資料
-
-<br/>
-
-### 範例：使用`mean`求<b>出版業合計</b>的歷年用電平均值
-
-<br/>
-
-### 挑戰：使用`sd`求<b>出版業合計</b>的歷年用電標準差
+- 透過`?sd`嘗試自學標準差的用法
+- 選取`場站代號`為1和`日期`為"2015-03-01"的資料
+- 計算`捷運市政府站(3號出口)`在`"2015-03-01"`的`降雨量`的標準差
 
 *** =pnotes
 
-1. 選取<b>出版業合計</b>的歷年用電消耗量資料
-2. 在`mean`中利用1.的結果
-3. 在`sd`中利用1.的結果
+```{r, echo = TRUE, results='hide'}
+x1 <- ubike[["場站代號"]] == 1
+x2 <- ubike[["日期"]] == "2015-03-01"
+ubike[x1 & x2, "降雨量"]
+sd(ubike[x1 & x2, "降雨量"])
 
---- &vcenter .largecontent
+library(dplyr)
+sd(select(
+  filter(ubike, 場站代號 == 1, 日期 == "2015-03-01"),
+  降雨量)[["降雨量"]])
+
+filter(ubike, 場站代號 == 1, 日期 == "2015-03-01") %>%
+  select(降雨量) %>%
+  extract2("降雨量") %>%
+  sd
+```
+
+--- &twocol .largecontent
+
+## 各行政區的站點數：學習`group_by`
+
+*** =left
+
+`r fig("R_ETL_Fn2.png")`
+
+- 個數：`length`
+- 平均：`mean`、標準差：`sd`、中位數：`median`
+- 可能的值的個數：`length(unique)`
+- 可能的值：`paste(unique, collapse = ",")`
+
+*** =right
+
+### 每日的平均雨量
+
+```{r, echo = TRUE, results = "hide"}
+group_by(ubike, 日期) %>%
+  summarise(平均降雨量 = mean(降雨量))
+```
+
+### 各場站區域的站點數
+
+```{r, echo = TRUE, results = "hide"}
+group_by(ubike, 場站區域) %>%
+  summarise(站點數 = 
+    length(unique(場站代號))) %>%
+  arrange(站點數)
+```
+
+### 各場站區域的站點數
+
+```{r, echo = TRUE, results = "hide"}
+group_by(ubike, 場站區域) %>%
+  summarise(站點代號清單 = 
+    paste(unique(場站代號), 
+          collapse = ","))
+```
+
+--- &vcenter .largecontent 
 
 ## 探索一個質化變數
 
-1. 選取電力資料中所有的標籤，存成`label`變數
-2. 學習`table`的用法
-    - `?table`
-    - `example(table)`
-3. 利用`table`觀察標籤的個數
+1. 利用`table`列出所有的`場站名稱`出現的次數
 
 *** =pnotes
 
-```{r table.example, echo = TRUE}
-data(power, package = "DSP2014R")
-label <- power[["label"]]
-# ?table
-# table(label)
+```{r table.example, echo = TRUE, results = "hide"}
+head(sort(table(ubike[["場站名稱"]])))
+
+table(ubike[["場站名稱"]]) %>%
+  sort %>%
+  head
 ```
 
 --- &vcenter .largecontent
@@ -853,46 +996,58 @@ Class Sex    Age
 
 --- &vcenter .largecontent
 
-## 描述資料間的關係：`formula`物件
+## 小挑戰：
 
-### 變數之間的因果關係
+1. 選取場站區域為`信義區`且日期為`"2015-03-01"`的列
+2. 選取欄`平均車輛數`與`總停車格`
+3. 利用布林運算式計算"`平均車輛數`"是否超過`總停車格`的一半
+    - 命名為`空位較多`
+4. 選取欄`時間`
+5. 比較`時間`和`空位較多`的交互關係
 
-`r fig("500px-Ishikawa_Fishbone_Diagram.svg.png", 100)`
+--- &vcenter
 
-出處：<http://en.wikipedia.org/wiki/Causality>
+## 小挑戰（參考答案）
 
---- &vcenter .largecontent
+```{r, results="hide"}
+x1 <- ubike[["場站區域"]] == "信義區"
+x2 <- ubike[["日期"]] == "2015-03-01"
+x3 <- ubike[x1 & x2, "平均車輛數"]
+x4 <- ubike[x1 & x2, "總停車格"]
+x5 <- x3 < x4 / 2
+x6 <- ubike[x1 & x2, "時間"]
+ftable(x6, x5)
 
-## 描述資料間的關係：`formula`物件
+x1 <- filter(ubike, 場站區域 == "信義區", 日期 == "2015-03-01")
+x2 <- mutate(x1, 空位較多 = 平均車輛數 < 總停車格 / 2)
+ftable(x2[["時間"]], x2[["空位較多"]])
 
-`Column Name 1 ~ Column Name 2 + ...`
-
-- 給定一個表格
-    - `Column Name 1`是代表結果資料的欄位名稱
-    - `Column Name 2`是代表原因資料的欄位名稱
-    - `...`表示原因不止一個欄位
-- formula中的欄位名稱不用加上雙引號
-
-```{r ftable.formula, eval = FALSE, echo = TRUE}
-ftable(Survived ~ Sex, Titanic)
-ftable(Survived ~ Sex + Class, Titanic)
+tbl <- filter(ubike, 場站區域 == "信義區", 日期 == "2015-03-01")  %>%
+  mutate(空位較多 = 平均車輛數 < 總停車格 / 2)
+ftable(tbl[["時間"]], tbl[["空位較多"]])
 ```
 
 --- .dark .segue
 
-## R 的基礎繪圖
+## ggplot2 簡介
+
+--- &vcenter .largecontent
+
+## ggplot2 的核心思想
+
+- 先把資料適當的整理成`data.frame`
+- 將`data.frame`送至`ggplot`函數
+- 各種繪圖工具利用`aes`定位欄位和對應的圖的元素
+    - x座標、y座標、顏色、分群
+- 一層一層的疊上繪圖要素
+    - 點、線、各種文字與標題說明
 
 --- &vcenter .largecontent
 
 ## 繪圖之前的整理資料：質化 v.s. 量化
 
-```{r power.level1.100, echo = TRUE, cache=TRUE}
-data(power, package = "DSP2014R")
-# unique(power$label)
-label <- power$label
-label.level1 <- label %in% paste0(LETTERS, ".")
-year.100 <- power[["year"]] == 100
-power.level1.100 <- power[label.level1 & year.100,]
+```{r ubike.site.rainfall, echo = TRUE, cache=TRUE}
+
 ```
 
 - 同時選取字母開頭<b>且</b>年度為100的資料

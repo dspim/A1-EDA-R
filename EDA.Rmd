@@ -676,5 +676,10 @@ wordcloud(tools, freq, random.color = TRUE, colors = pal)
 
 --- &vcenter .largecontent
 
+- 請至`http://data.dsp.im/dataset/youbike-and-weather-data-20150331`抓取ubike和天氣的資料
+- 也可找講師或助教透過usb 隨身碟複製資料
+
+--- &vcenter .largecontent
+
 ## Q&A
 
