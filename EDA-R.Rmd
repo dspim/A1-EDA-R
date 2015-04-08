@@ -595,7 +595,7 @@ write(raw2, "data/ubikeweatherutf8.csv")
 
 ## ubike是一種`data.frame`
 
-```{r}
+```{r, echo = TRUE}
 class(ubike)
 ```
 
@@ -799,7 +799,7 @@ x4 <- ubike[x3,]
 
 --- &vcenter .largecontent
 
-## 2014 年影響R 使用者們最大的套件之一：magrittr
+## 2014 年最有影響的套件之一：magrittr
 
 - 壓縮的程式碼不好讀
 - 展開的程式碼會產生很多暫存變數
@@ -819,7 +819,7 @@ ubike[["場站代號"]] %>%
 
 --- &vcenter .largecontent
 
-## 2014 年影響R 使用者們最大的套件之一：dplyr
+## 2014 年最有影響的套件之一：dplyr
 
 - 讓R 使用者可以用更有彈性的方式來處理資料
 - 針對`data.frame`做設計（名稱中的`d`）
@@ -872,14 +872,8 @@ ubike[["場站代號"]] %>%
 
 ### 範例：學習`mean`的用法
 
-- 閱讀說明文件
-    ```{r mean.help, eval = FALSE, echo=TRUE}
-    ?mean
-    ```
-- 嘗試範例
-    ```{r mean.example, eval = FALSE, echo = TRUE} 
-    example(mean)
-    ```
+- 閱讀說明文件 `?mean`
+- 嘗試範例 `example(mean)`
 - 自動完成
     - 在命令列輸入`mena(`後按下`tab`
 
@@ -920,10 +914,10 @@ filter(ubike, 場站代號 == 1, 日期 == "2015-03-01") %>%
 
 `r fig("R_ETL_Fn2.png")`
 
-- 個數：`length`
-- 平均：`mean`、標準差：`sd`、中位數：`median`
-- 可能的值的個數：`length(unique)`
-- 可能的值：`paste(unique, collapse = ",")`
+- `length`
+- `mean`、`sd`、`median`
+- `length(unique)`
+- `paste(unique, collapse = ",")`
 
 *** =right
 
@@ -1119,7 +1113,7 @@ ggplot(x3) +
 --- &vcenter .largecontent
 
 - [ggplot2 cheat sheet from RStudio Inc.](http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
-- [ggplot2 官方文件站點](http://docs.ggplot2.org/current/index.html)
+- [ggplot2 官方文件](http://docs.ggplot2.org/current/index.html)
 
 --- &vcenter .largecontent
 
@@ -1128,6 +1122,7 @@ ggplot(x3) +
 ### Maker精神：雕圖
 
 - 學習更底層的繪圖指令，如`grid`套件
+- 學習原生的繪圖指令
 
 ### 站在巨人的肩膀上
 
@@ -1178,11 +1173,11 @@ ggplot(x3) +
 
 - 請見現場live demo
 
---- &vcenter
+--- &vcenter .largecontent
 
 ## shiny
 
-<http://shiny.rstudio.com/gallery/>
+- <http://shiny.rstudio.com/gallery/>
 
 --- .dark .segue
 
@@ -1217,7 +1212,6 @@ ggplot(x3) +
         - ptt R_Language版
         - [R軟體使用者論壇](https://groups.google.com/forum/#!forum/taiwanruser)
     - `sos`套件，請見Demo
-- 利用今日習得的心法掌握函數用法
 
 --- &vcenter .largecontent
 
@@ -1226,6 +1220,7 @@ ggplot(x3) +
 - R 是由一群來自世界上的志工貢獻而成的
 - 你覺得R 有不好用的地方嗎？
     - 歡迎聯絡我，讓我們一起來貢獻，改進R 的使用體驗
+    - 歡迎企業聯繫DSP ，我們可以提供R 的客製化服務
 
 <img src="assets/img/Rlogo.jpg" width="225" height="171"/>
 
