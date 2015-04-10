@@ -175,13 +175,31 @@ filter(ubike, sno == 1) %>% group_by(date) %>% summarise(avg.sbi = mean(avg.sbi)
 
 ## 如何掌握資料的脈絡
 
-- 了解資料的格式與物理意義
+- 了解資料的物理意義
+    - 收集的目的
+    - 收集的方法
 - 了解資料的欄位與對應的類型
 - 檢查和整理資料
 
 --- &vcenter .largecontent
 
-## 了解資料的格式與物理意義
+## 了解資料的物理意義
+
+`r fig("20150130_MarchMad_627x349.jpg")`
+
+出處：<https://www.kaggle.com/c/march-machine-learning-mania-2015>
+
+--- &vcenter .largecontent
+
+## 了解資料的物理意義
+
+`r fig("Automated-Data-Collection.jpg")`
+
+出處：<http://www.memex.ca/solution/automated-data-collection/>
+
+--- &vcenter .largecontent
+
+## 了解資料的欄位與對應的類型
 
 ### Kaggle
 
@@ -189,7 +207,7 @@ filter(ubike, sno == 1) %>% group_by(date) %>% summarise(avg.sbi = mean(avg.sbi)
 
 --- &vcenter .largecontent
 
-## 了解資料的格式與物理意義
+## 了解資料的欄位與對應的類型
 
 ### Ubike
 
@@ -301,7 +319,24 @@ cbind(
   ubike.sarea.count %>% `[`(6:10,) ,
   ubike.sarea.count %>% `[`(11:15,) ,
   ubike.sarea.count %>% `[`(16:20,) ) %>% 
-  xtable %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
+  xtable(digit = 0) %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
+```
+
+--- &vcenter .largecontent
+
+## 類別型變數 - 各類別的值與分佈
+
+```{r level-ubike-tbl-mistake, echo = FALSE, dependson="loadubike", results='asis'}
+ubike.sna <- group_by(ubike, sna) %>% summarise(sarea = paste(unique(sarea), collapse=","))
+stopifnot(mutate(ubike.sna, sarea.count = length(strsplit(sarea, ",")[[1]])) %>% filter(sarea.count > 1) %>% nrow == 0)
+ubike.sarea.count <- table(ubike.sna$sarea) %>% as.data.frame %>% set_colnames(c("sarea", "count")) %>% rbind(data.frame(sarea="苓雅區", count=1))
+cbind(
+  ubike.sarea.count %>% `[`(1:5,) ,
+  ubike.sarea.count %>% `[`(6:10,) ,
+  ubike.sarea.count %>% `[`(11:15,) ,
+  ubike.sarea.count %>% `[`(16:20,) ,
+  ubike.sarea.count %>% `[`(21:25,)) %>% 
+  xtable(digits = 0) %>% print.xtable(type = "html", include.colnames = FALSE, include.rownames = FALSE)
 ```
 
 --- &vcenter .largecontent
@@ -441,8 +476,17 @@ cars %>% ggplot(aes(x = speed, y = dist)) +
   geom_smooth(method = "lm", sd = TRUE)
 ```
 
+--- &vcenter .largecontent
+
+## [吸煙和肺癌的關係](http://www.tomotherapy.org.tw/15mc_1950.htm)
+
+- 在1939年，德國的研究指出，和健康人比起來，肺癌患者中吸菸者較多。
+- 1950年早期，在美國由Ernst Wynder 及 Evarts Graham所做，包含了600位肺癌患者及600位對照組的研究。
+- Doll和Hill發出了超過34,000份問卷，針對英國男性醫生收集吸煙習慣的細節，且進一步隨問卷調查，並記錄死亡原因。在1954年第一篇研究報告發表在英國醫學雜誌，而後續的訪查報告於1956年發表。
+- 1964年美國衛生局長所提出的報告，結論是「在男性吸煙與肺癌間具有因果關係；而且吸煙影響的幅度遠遠超過其他所有因素。」
+
 ```{r cc, results='asis'}
-for(i in 1:6) cat(sprintf("--- &vcenter .largecontent
+for(i in 1:1) cat(sprintf("--- &vcenter .largecontent
 
 ## [相關性還是因果關係？](http://www.bloomberg.com/bw/magazine/correlation-or-causation-12012011-gfx.html)
 
@@ -490,6 +534,21 @@ ftable(Sex ~ Survived, data = Titanic) %>%
 
 ## 觀察兩個欄位的資料 - 類別 vs 數值
 
+<center>
+```{r, dependson="loadubike", fig.height=7, warning=FALSE}
+filter(ubike, grepl("2014-12", date)) %>%
+  group_by(sarea) %>%
+  summarise(avg.rainfall=mean(rainfall)) %>%
+  ggplot + 
+  geom_bar(aes(x = sarea, y = avg.rainfall, fill = sarea), stat="identity") +
+  thm + las2
+```
+</center>
+
+--- &twocol .largecontent
+
+## 觀察兩個欄位的資料 - 類別 vs 數值
+
 *** =left
 
 <br/>
@@ -512,7 +571,7 @@ data.frame(房價 = c("25%", "50%", "平均", "75%"),
 
 --- &vcenter .largecontent
 
-## 觀察兩個欄位的資料 - 類別 vs 數值
+## 觀察兩個欄位的資料 - 類別(?) vs 數值
 
 ### BoxPlot
 
@@ -610,6 +669,10 @@ cars %>% ggplot(aes(x = speed, y = dist)) +
     - 相關係數
     - X-Y 散部圖
     - 時間變化圖
+    
+--- &vcenter .largecontent
+
+## 實例經驗分享
 
 --- .dark .segue
 
