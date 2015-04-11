@@ -223,6 +223,17 @@ install.packages(&quot;pkg-name&quot;, repos = &quot;來源&quot;)
 </ul></li>
 </ul>
 
+<pre><code class="r"># windows
+utils:::menuInstallLocal()
+# mac 
+{
+  pkgpath &lt;- file.choose()
+  pkgdir &lt;- paste(head(strsplit(pkgpath, &quot;/&quot;)[[1]], -1), collapse=&quot;/&quot;)
+  invisible(lapply(dir(pkgdir, &quot;*.tgz&quot;, full.names = TRUE), 
+    install.packages, repos=NULL))
+}
+</code></pre>
+
 </article>
 <!-- Presenter Notes -->
 </slide>
@@ -572,7 +583,7 @@ rainfall2 &lt;- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
 <pre><code class="r">Sys.time()
 </code></pre>
 
-<pre><code>## [1] &quot;2015-04-12 01:38:08 CST&quot;
+<pre><code>## [1] &quot;2015-04-12 02:24:36 CST&quot;
 </code></pre>
 
 <pre><code class="r">ISOdatetime(year = 1970, month = 1, day = 1, 
@@ -798,7 +809,7 @@ as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
 
 <!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
 
-<!-- Sun Apr 12 01:38:08 2015 -->
+<!-- Sun Apr 12 02:24:36 2015 -->
 
 <table border=1>
   <tr> <td> 日期 </td> <td> factor </td> <td> 總停車格 </td> <td> integer </td> <td> 最小空位數 </td> <td> integer </td> </tr>
