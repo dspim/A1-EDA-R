@@ -590,13 +590,15 @@ filter(ubike, grepl("2015-02", date)) %>% mutate(hour = factor(hour, levels = 0:
 *** =left
 
 ```{r cor1, fig.height=6, cache = FALSE}
-data.frame(x = .x <- rnorm(100), y = .y <- rnorm(100)) %>% ggplot(aes(x = x, y = y)) +
+.x <- rnorm(100)
+.y <- rnorm(100)
+data.frame(x = .x, y = .y) %>% ggplot(aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm") +
   thm
 ```
 
-相關係數：`r cor(.x, .y)`
+相關係數：`r stats::cor(.x, .y)`
 
 *** =right
 
@@ -607,7 +609,7 @@ data.frame(x = .x, y = 3 * .x + .y) %>% ggplot(aes(x = x, y = y)) +
   thm
 ```
 
-相關係數：`r cor(.x, 3 * .x + .y)`
+相關係數：`r stats::cor(.x, 3 * .x + .y)`
 
 --- &twocol .largecontent
 
@@ -669,7 +671,7 @@ cars %>% ggplot(aes(x = speed, y = dist)) +
     - 相關係數
     - X-Y 散部圖
     - 時間變化圖
-    
+
 --- &vcenter .largecontent
 
 ## 實例經驗分享
