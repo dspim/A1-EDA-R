@@ -147,6 +147,7 @@ install.packages("pkg-name", repos = "來源")
 
 - 利用UI安裝`magrittr`
 - 透過USB 安裝課程所需套件
+    - `RSQLite`, `dplyr`, `ggplot2`
 
 --- .dark .segue
 
