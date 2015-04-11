@@ -9,7 +9,7 @@ hitheme     : zenburn
 widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
 knit        : slidify::knit2slides
---- &twocol
+--- &vcenter .largecontent
 
 ```{r setup, include=FALSE, cache=FALSE}
 suppressPackageStartupMessages({
@@ -42,23 +42,13 @@ ubike <- read.table(ubike_path, sep = ",", header = TRUE)
 # ubike <- readRDS("data/ubike-weather-utf8.rds")
 ```
 
-## 關於講師
+## EDA的複習
 
-*** =left
-
-### Wush Wu
-
-- Taiwan R User Group 共同創辦人
-- 以下R 套件的貢獻者:
-    - FeatureHashing
-    - digest
-    - rcppcnpy
-    - knitr
-- 臺大電機所博士生
-
-*** =right
-
-`r fig("wush.jpg")`
+- 了解如何看數據
+    - 類別型數據
+    - 數值型數據
+    - 單一數據
+    - 兩欄數據
 
 --- &vcenter .largecontent
 
@@ -514,9 +504,10 @@ split(ubike.ctype, rep(1:3, each = 7)) %>%
 ## 讀取表格檔案 - 1. 先檢視資料
 
 ```{r read.lines, echo = TRUE}
-# path <- "data/ubikeweatherbig5.csv" 
-path <- "data/ubikeweatherutf8.csv"
-# readLines(path, n = 5)
+# path <- "data/ubikeweatherbig5.csv"
+# path <- "data/ubikeweatherutf8.csv"
+path <- file.choose()
+readLines(path, n = 5)
 ```
 
 --- &vcenter .largecontent
@@ -527,7 +518,12 @@ path <- "data/ubikeweatherutf8.csv"
 
 ```{r read.table, echo = TRUE, eval = FALSE}
 ubike <- read.table(path, sep = ",", header = TRUE, nrows = 100)
-# system.time(ubike <- read.table(path, sep = ",", header = TRUE))
+head(ubike)
+ubike <- read.table(path, sep = ",", header = TRUE, 
+  colClasses = c("factor", "integer", "integer", "factor", "factor", 
+    "numeric", "numeric", "integer", "numeric", "integer", "integer", 
+    "numeric", "numeric", "integer", "integer", "numeric", "numeric", 
+    "numeric", "numeric", "numeric", "numeric"))
 # object.size(ubike) # 約86MB
 ```
 
