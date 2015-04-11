@@ -148,6 +148,18 @@ install.packages("pkg-name", repos = "來源")
 - 利用UI安裝`magrittr`
 - 透過USB 安裝課程所需套件
 
+```r
+# windows
+utils:::menuInstallLocal()
+# mac 
+{
+  pkgpath <- file.choose()
+  pkgdir <- paste(head(strsplit(pkgpath, "/")[[1]], -1), collapse="/")
+  invisible(lapply(dir(pkgdir, "*.tgz", full.names = TRUE), 
+    install.packages, repos=NULL))
+}
+```
+
 --- .dark .segue
 
 ## 讓我們來說R 語
