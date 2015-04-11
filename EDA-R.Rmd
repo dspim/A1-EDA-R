@@ -145,7 +145,8 @@ install.packages("pkg-name", repos = "來源")
 
 ### 套件安裝
 
-- 利用UI安裝`RSQLite`、`ggplot2`、`magrittr`和`dplyr`套件
+- 利用UI安裝`magrittr`
+- 透過USB 安裝課程所需套件
 
 --- .dark .segue
 
@@ -496,14 +497,15 @@ split(ubike.ctype, rep(1:3, each = 7)) %>%
 
 ## 讀取表格檔案 - 0. 先抓取資料
 
-- 請至`http://data.dsp.im/dataset/youbike-and-weather-data-20150331`抓取ubike和天氣的資料
-- 放置檔案至data資料夾之下（可跟隨講師操作）
+- 抓取ubike和天氣的資料
+    - 可至`http://data.dsp.im/dataset/youbike-and-weather-data-20150331`
+    - 可透過USB 隨身碟
 
 --- &vcenter .largecontent
 
 ## 讀取表格檔案 - 1. 先檢視資料
 
-```{r read.lines, echo = TRUE}
+```{r read.lines, echo = TRUE, eval = FALSE}
 # path <- "data/ubikeweatherbig5.csv"
 # path <- "data/ubikeweatherutf8.csv"
 path <- file.choose()
@@ -824,21 +826,29 @@ ubike[["場站代號"]] %>%
     - 快
     - 支援異質資料源（`data.frame`或資料庫中的表格）
 
---- &twocol .largecontent
+--- &vcenter .largecontent
 
 ## 學習dplyr的官方方式：`vignette`
 
+```{r dplyr-vignette, echo = TRUE, eval=FALSE}
+vignette(all = TRUE, package = "dplyr")
+vignette("introduction", package = "dplyr")
+```
+
 - 更詳細的dplyr介紹可以閱讀dplyr的小論文
 - R 的開發者會針對一個主題撰寫小論文做介紹
-- 讓我們先透過vignette來簡易學習，之後的範例中再做細部解釋
+
+--- &twocol .largecontent
+
+## dplyr簡介
 
 *** =left
 
-- `filter`
-- `select`
-- `mutate`
-- `arrange`
-- `group_by` + `summarise`
+- `filter` 對列做篩選
+- `select` 對欄做篩選
+- `mutate` 更改欄或新增欄
+- `arrange` 排列
+- **`group_by` + `summarise` 分類
 
 *** =right
 
@@ -1057,7 +1067,7 @@ x3 <- filter(ubike, grepl("2015-02", 日期, fixed = TRUE),
 ## 質化 v.s. 量化：barchart
 
 ```{r ubike.site.rainfall2, depends = "ubike.site.rainfall1", echo=TRUE, fig.height = 5, results = "hide", warning=FALSE, fig.show='hide'}
-thm <- theme(text=element_text(size=18))
+thm <- theme(text=element_text(size=18)) # + theme_gray(base_family = "STHeiti")
 las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggplot(x3) +
