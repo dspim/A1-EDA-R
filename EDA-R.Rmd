@@ -579,9 +579,14 @@ power <- read.table(file = path, header = TRUE, sep = "1")
 
 ### 編碼錯誤
 
-```{r read.table_wrong_encoding, echo = TRUE, cache=TRUE}
+```{r read.table_wrong_encoding, echo = TRUE, cache=TRUE, eval = FALSE}
 path <- "data/ubikeweatherbig5.csv"
 power <- read.table(file = path, header = TRUE, sep = ",", nrows = 10)
+```
+
+```
+錯誤在type.convert(data[[i]], as.is = as.is[i], dec = dec, numerals = numerals,  : 
+  無效的多位元組字串於 '<ab>H<b8>q<b0><cf>'
 ```
 
 - 查詢檔案的編碼
