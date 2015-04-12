@@ -1080,7 +1080,7 @@ x3 <- filter(ubike, grepl("2015-02", 日期, fixed = TRUE),
 ## 質化 v.s. 量化：barchart
 
 ```{r ubike.site.rainfall2, depends = "ubike.site.rainfall1", echo=TRUE, fig.height = 5, results = "hide", warning=FALSE, fig.show='hide'}
-thm <- theme(text=element_text(size=18)) # + theme_gray(base_family = "STHeiti")
+thm <- theme(text=element_text(size=18)) + theme_gray(base_family = "STHeiti")
 las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggplot(x3) +
@@ -1088,7 +1088,27 @@ ggplot(x3) +
   thm + las2
 ```
 
---- &vcenter largecontent
+--- &vcenter .largecontent
+
+## 質化 v.s. 量化：boxplot 
+
+```{r ubike.site.rainfall3, depends = "c.ubike", echo = TRUE, eval = FALSE}
+x1.1 <- grepl("2015-02", ubike[["日期"]], fixed = TRUE)
+x1.2 <- ubike[["場站區域"]] == "信義區"
+x2 <- group_by(ubike[x1.1,], 場站名稱)
+# x3 <- summarise(x2, 平均降雨量 = mean(降雨量))
+
+x3 <- filter(ubike, grepl("2015-02", 日期, fixed = TRUE), 
+             場站區域 == "信義區") # %>%
+#  group_by(場站名稱) %>% summarise(平均降雨量=mean(降雨量))
+
+ggplot(x3) +
+  geom_boxplot(aes(x = 場站名稱, y = 降雨量)) +
+  thm + las2
+
+```
+
+--- &vcenter .largecontent
 
 ## 量化 v.s. 量化：繪圖之前的整理資料
 

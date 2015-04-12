@@ -252,7 +252,7 @@ utils:::menuInstallLocal()
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <pre><code class="r">&quot;1;2;3;&quot;
 </code></pre>
 
@@ -316,7 +316,7 @@ utils:::menuInstallLocal()
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <pre><code class="r">1 + 1
 </code></pre>
 
@@ -359,11 +359,11 @@ utils:::menuInstallLocal()
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <pre><code class="r">One
 </code></pre>
 
-<pre><code>## Error: object &#39;One&#39; not found
+<pre><code>## Error in eval(expr, envir, enclos): 找不到物件 &#39;One&#39;
 </code></pre>
 
 <pre><code class="r">One &lt;- 1
@@ -404,7 +404,7 @@ Two
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <pre><code class="r">1:3
 </code></pre>
 
@@ -583,7 +583,7 @@ rainfall2 &lt;- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
 <pre><code class="r">Sys.time()
 </code></pre>
 
-<pre><code>## [1] &quot;2015-04-12 02:24:36 CST&quot;
+<pre><code>## [1] &quot;2015-04-12 12:48:08 CST&quot;
 </code></pre>
 
 <pre><code class="r">ISOdatetime(year = 1970, month = 1, day = 1, 
@@ -613,7 +613,7 @@ rainfall2 &lt;- c(0.041,0.315,0.586,0.83,1.013,1.108,1.124,
 </code></pre>
 
 <pre><code>## [1] 信義區 大安區 信義區
-## Levels: 信義區 大安區
+## Levels: 大安區 信義區
 </code></pre>
 
 </article>
@@ -695,7 +695,7 @@ cut(x, breaks = c(70, 80, 90, 100))
 as.numeric(x)
 </code></pre>
 
-<pre><code>## Warning: NAs introduced by coercion
+<pre><code>## Warning: 強制變更過程中產生了 NA
 </code></pre>
 
 <pre><code>## [1]  1  2  3  2 NA
@@ -781,19 +781,19 @@ as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
 <li>請問根據以下的輸出，這份ubike的各欄類別為何？</li>
 </ul>
 
-<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+<!-- html table generated in R 3.1.2 by xtable 1.7-3 package -->
 
-<!-- Fri Apr 10 00:00:47 2015 -->
+<!-- Sun Apr 12 12:45:13 2015 -->
 
-<table border=1>
-  <tr> <td> date </td> <td> factor </td> <td> tot </td> <td> integer </td> <td> min.bemp </td> <td> integer </td> </tr>
-  <tr> <td> hour </td> <td> integer </td> <td> avg.sbi </td> <td> numeric </td> <td> std.bemp </td> <td> numeric </td> </tr>
-  <tr> <td> sno </td> <td> integer </td> <td> max.sbi </td> <td> integer </td> <td> temp </td> <td> numeric </td> </tr>
-  <tr> <td> sarea </td> <td> factor </td> <td> min.sbi </td> <td> integer </td> <td> humidity </td> <td> numeric </td> </tr>
-  <tr> <td> sna </td> <td> factor </td> <td> std.sbi </td> <td> numeric </td> <td> pressure </td> <td> numeric </td> </tr>
-  <tr> <td> lat </td> <td> numeric </td> <td> avg.bemp </td> <td> numeric </td> <td> max.anemo </td> <td> numeric </td> </tr>
-  <tr> <td> lng </td> <td> numeric </td> <td> max.bemp </td> <td> integer </td> <td> rainfall </td> <td> numeric </td> </tr>
-   </table>
+<TABLE border=1>
+  <TR> <TD> date </TD> <TD> factor </TD> <TD> tot </TD> <TD> integer </TD> <TD> min.bemp </TD> <TD> integer </TD> </TR>
+  <TR> <TD> hour </TD> <TD> integer </TD> <TD> avg.sbi </TD> <TD> numeric </TD> <TD> std.bemp </TD> <TD> numeric </TD> </TR>
+  <TR> <TD> sno </TD> <TD> integer </TD> <TD> max.sbi </TD> <TD> integer </TD> <TD> temp </TD> <TD> numeric </TD> </TR>
+  <TR> <TD> sarea </TD> <TD> factor </TD> <TD> min.sbi </TD> <TD> integer </TD> <TD> humidity </TD> <TD> numeric </TD> </TR>
+  <TR> <TD> sna </TD> <TD> factor </TD> <TD> std.sbi </TD> <TD> numeric </TD> <TD> pressure </TD> <TD> numeric </TD> </TR>
+  <TR> <TD> lat </TD> <TD> numeric </TD> <TD> avg.bemp </TD> <TD> numeric </TD> <TD> max.anemo </TD> <TD> numeric </TD> </TR>
+  <TR> <TD> lng </TD> <TD> numeric </TD> <TD> max.bemp </TD> <TD> integer </TD> <TD> rainfall </TD> <TD> numeric </TD> </TR>
+   </TABLE>
 
 </article>
 <!-- Presenter Notes -->
@@ -807,19 +807,22 @@ as.numeric(gsub(&quot;,&quot;, &quot;&quot;, gdp))
 <li>請問根據中文名稱，這份ubike的各欄類別是否合理？</li>
 </ul>
 
-<!-- html table generated in R 3.1.3 by xtable 1.7-4 package -->
+<pre><code>## Warning in file(file, &quot;rt&quot;):
+## 無法開啟檔案 &#39;ubike-cname.csv&#39; ：No
+## such file or directory
+</code></pre>
 
-<!-- Sun Apr 12 02:24:36 2015 -->
+<pre><code>## Error in file(file, &quot;rt&quot;): 無法開啟連結
+</code></pre>
 
-<table border=1>
-  <tr> <td> 日期 </td> <td> factor </td> <td> 總停車格 </td> <td> integer </td> <td> 最小空位數 </td> <td> integer </td> </tr>
-  <tr> <td> 時間 </td> <td> integer </td> <td> 平均車輛數 </td> <td> numeric </td> <td> 空位數標準差 </td> <td> numeric </td> </tr>
-  <tr> <td> 場站代號 </td> <td> integer </td> <td> 最大車輛數 </td> <td> integer </td> <td> 平均氣溫 </td> <td> numeric </td> </tr>
-  <tr> <td> 場站區域 </td> <td> factor </td> <td> 最小車輛數 </td> <td> integer </td> <td> 溼度 </td> <td> numeric </td> </tr>
-  <tr> <td> 場站名稱 </td> <td> factor </td> <td> 車輛數標準差 </td> <td> numeric </td> <td> 氣壓 </td> <td> numeric </td> </tr>
-  <tr> <td> 緯度 </td> <td> numeric </td> <td> 平均空位數 </td> <td> numeric </td> <td> 最大風速 </td> <td> numeric </td> </tr>
-  <tr> <td> 經度 </td> <td> numeric </td> <td> 最大空位數 </td> <td> integer </td> <td> 降雨量 </td> <td> numeric </td> </tr>
-   </table>
+<pre><code>## Error in eval(expr, envir, enclos): 找不到物件 &#39;ubike.cname.raw&#39;
+</code></pre>
+
+<pre><code>## Error in function_list[[k]](value): 找不到物件 &#39;ubike.cname&#39;
+</code></pre>
+
+<pre><code>## Error in split(ubike.ctype, rep(1:3, each = 7)): 找不到物件 &#39;ubike.ctype&#39;
+</code></pre>
 
 </article>
 <!-- Presenter Notes -->
@@ -920,11 +923,12 @@ ubike &lt;- read.table(path, sep = &quot;,&quot;, header = TRUE,
 power &lt;- read.table(file = path, header = TRUE, sep = &quot;,&quot;)
 </code></pre>
 
-<pre><code>## Warning: cannot open file &#39;wrong_path&#39;:
-## No such file or directory
+<pre><code>## Warning in file(file, &quot;rt&quot;):
+## 無法開啟檔案 &#39;wrong_path&#39; ：No such
+## file or directory
 </code></pre>
 
-<pre><code>## Error: cannot open the connection
+<pre><code>## Error in file(file, &quot;rt&quot;): 無法開啟連結
 </code></pre>
 
 <ul>
@@ -954,12 +958,7 @@ power &lt;- read.table(file = path, header = TRUE, sep = &quot;,&quot;)
 power &lt;- read.table(file = path, header = TRUE, sep = &quot;1&quot;)
 </code></pre>
 
-<pre><code>## Warning: cannot open file
-## &#39;data/ubikeweatherbig5.csv&#39;: No such
-## file or directory
-</code></pre>
-
-<pre><code>## Error: cannot open the connection
+<pre><code>## Error in read.table(file = path, header = TRUE, sep = &quot;1&quot;): more columns than column names
 </code></pre>
 
 <ul>
@@ -985,12 +984,7 @@ power &lt;- read.table(file = path, header = TRUE, sep = &quot;1&quot;)
 power &lt;- read.table(file = path, header = TRUE, sep = &quot;,&quot;, nrows = 10)
 </code></pre>
 
-<pre><code>## Warning: cannot open file
-## &#39;data/ubikeweatherbig5.csv&#39;: No such
-## file or directory
-</code></pre>
-
-<pre><code>## Error: cannot open the connection
+<pre><code>## Error in type.convert(data[[i]], as.is = as.is[i], dec = dec, numerals = numerals, : 無效的多位元組字串於 &#39;&lt;ab&gt;H&lt;b8&gt;q&lt;b0&gt;&lt;cf&gt;&#39;
 </code></pre>
 
 <ul>
@@ -1214,11 +1208,11 @@ power2 &lt;- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372
 <ul>
 <li><p>運用index從<code>power1</code>中選取第88年和第90年的年度用電量。結果應該為：</p>
 
-<pre><code>## [1] 6.426e+09 7.324e+09
+<pre><code>## [1] 6425887925 7323992603
 </code></pre></li>
 <li><p>運用布林運算自<code>power2</code>中選出，製造業超過社會服務業9.5倍的用電年度的用電量。結果應該為：</p>
 
-<pre><code>## [1] 5.909e+10 6.198e+10 6.738e+10
+<pre><code>## [1] 59090445718 61981666330 67378329131
 </code></pre></li>
 </ul>
 
@@ -1253,16 +1247,12 @@ power2 &lt;- c(59090445718, 61981666330, 67378329131, 66127460204.6482, 69696372
   <h2>表格的選取 - 欄</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">head(ubike[[&quot;日期&quot;]])
+<pre><code class="r">head(ubike[[&quot;日期&quot;]])head(ubike[,1])
 </code></pre>
 
 <pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
 ## [4] 2014-12-08 2014-12-08 2014-12-08
 ## 108 Levels: 2014-12-08 ... 2015-03-31
-</code></pre>
-
-<pre><code class="r"># head(ubike$日期)
-head(ubike[,1])
 </code></pre>
 
 <pre><code>## [1] 2014-12-08 2014-12-08 2014-12-08
@@ -1279,7 +1269,7 @@ head(ubike[,1])
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <ol>
 <li>自<code>ubike</code>選取<code>場站代號</code></li>
 <li>將結果1.輸入至函數<code>unique</code></li>
@@ -1423,7 +1413,7 @@ vignette(&quot;introduction&quot;, package = &quot;dplyr&quot;)
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <ul>
 <li><code>filter</code> 對列做篩選</li>
 <li><code>select</code> 對欄做篩選</li>
@@ -1533,7 +1523,7 @@ filter(ubike, 場站代號 == 1, 日期 == &quot;2015-03-01&quot;) %&gt;%
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <p><img src='assets/img/R_ETL_Fn2.png' style='max-width: 100%;max-height: 100%'></img></p>
 
 <ul>
@@ -1733,7 +1723,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
   <h2>質化 v.s. 量化：barchart</h2>
 </hgroup>
 <article class = 'flexbox vcenter'>
-<pre><code class="r">thm &lt;- theme(text=element_text(size=18)) # + theme_gray(base_family = &quot;STHeiti&quot;)
+<pre><code class="r">thm &lt;- theme(text=element_text(size=18)) + theme_gray(base_family = &quot;STHeiti&quot;)
 las2 &lt;- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggplot(x3) +
@@ -1744,7 +1734,29 @@ ggplot(x3) +
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-77" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-77" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<hgroup>
+  <h2>質化 v.s. 量化：boxplot</h2>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<pre><code class="r">x1.1 &lt;- grepl(&quot;2015-02&quot;, ubike[[&quot;日期&quot;]], fixed = TRUE)
+x1.2 &lt;- ubike[[&quot;場站區域&quot;]] == &quot;信義區&quot;
+x2 &lt;- group_by(ubike[x1.1,], 場站名稱)
+# x3 &lt;- summarise(x2, 平均降雨量 = mean(降雨量))
+
+x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE), 
+             場站區域 == &quot;信義區&quot;) # %&gt;%
+#  group_by(場站名稱) %&gt;% summarise(平均降雨量=mean(降雨量))
+
+ggplot(x3) +
+  geom_boxplot(aes(x = 場站名稱, y = 降雨量)) +
+  thm + las2
+</code></pre>
+
+</article>
+<!-- Presenter Notes -->
+</slide>
+<slide class="largecontent" id="slide-78" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>量化 v.s. 量化：繪圖之前的整理資料</h2>
 </hgroup>
@@ -1765,7 +1777,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-78" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-79" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>量化 v.s. 量化：Scatter Plot</h2>
 </hgroup>
@@ -1782,7 +1794,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-79" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-80" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>量化 v.s. 量化：Grouped Scatter Plot</h2>
 </hgroup>
@@ -1795,7 +1807,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-80" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-81" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   
 </hgroup>
@@ -1808,7 +1820,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-81" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-82" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>圖形的美化</h2>
 </hgroup>
@@ -1829,13 +1841,13 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-82" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="" id="slide-83" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
     <h2><a href="https://github.com/jrnold/ggthemes">ggthemes</a></h2>
   </hgroup>
   <article data-timings="">
     
-<div style='float:left;width:48%;margin: 0 auto;' class='centered'>
+<div style='float:left;width:48%;' class='centered'>
   <p><br/>
 <br/>
 <center>
@@ -1854,7 +1866,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
   </article>
   <!-- Presenter Notes -->
 </slide>
-<slide class="dark segue" id="slide-83" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="dark segue" id="slide-84" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
     <h2>圖表的輸出</h2>
   </hgroup>
@@ -1863,7 +1875,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
   </article>
   <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-84" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-85" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>輸出圖片</h2>
 </hgroup>
@@ -1877,7 +1889,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-85" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-86" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>輸出表格</h2>
 </hgroup>
@@ -1890,7 +1902,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-86" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-87" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>R markdown 火力展示</h2>
 </hgroup>
@@ -1902,7 +1914,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-87" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-88" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>shiny</h2>
 </hgroup>
@@ -1914,7 +1926,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="dark segue" id="slide-88" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="dark segue" id="slide-89" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <hgroup>
     <h2>總結</h2>
   </hgroup>
@@ -1923,7 +1935,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
   </article>
   <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-89" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-90" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>本週目標</h2>
 </hgroup>
@@ -1951,7 +1963,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-90" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-91" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>掌握心法後，如何自行利用R 解決問題</h2>
 </hgroup>
@@ -1976,7 +1988,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-91" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-92" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>你喜歡R 嗎？</h2>
 </hgroup>
@@ -1996,7 +2008,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="largecontent" id="slide-92" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
+<slide class="largecontent" id="slide-93" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;" >
 <hgroup>
   <h2>Q&amp;A</h2>
 </hgroup>
@@ -2005,7 +2017,7 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
 </article>
 <!-- Presenter Notes -->
 </slide>
-<slide class="" id="slide-93" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
+<slide class="" id="slide-94" style="background-image: url('libraries/frameworks/io2012-dsp/images/dsp-page.png'); background-repeat:no-repeat; background-position:center; background-size: 100% 100%;">
   <article data-timings="">
     
   </article>
@@ -2473,104 +2485,110 @@ x3 &lt;- filter(ubike, grepl(&quot;2015-02&quot;, 日期, fixed = TRUE),
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='量化 v.s. 量化：繪圖之前的整理資料'>
+        data-slide=77 title='質化 v.s. 量化：boxplot'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='量化 v.s. 量化：Scatter Plot'>
+        data-slide=78 title='量化 v.s. 量化：繪圖之前的整理資料'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='量化 v.s. 量化：Grouped Scatter Plot'>
+        data-slide=79 title='量化 v.s. 量化：Scatter Plot'>
          79
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=80 title=''>
+        data-slide=80 title='量化 v.s. 量化：Grouped Scatter Plot'>
          80
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=81 title='圖形的美化'>
+        data-slide=81 title=''>
          81
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=82 title='<a href="https://github.com/jrnold/ggthemes">ggthemes</a>'>
+        data-slide=82 title='圖形的美化'>
          82
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=83 title='圖表的輸出'>
+        data-slide=83 title='<a href="https://github.com/jrnold/ggthemes">ggthemes</a>'>
          83
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=84 title='輸出圖片'>
+        data-slide=84 title='圖表的輸出'>
          84
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=85 title='輸出表格'>
+        data-slide=85 title='輸出圖片'>
          85
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=86 title='R markdown 火力展示'>
+        data-slide=86 title='輸出表格'>
          86
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=87 title='shiny'>
+        data-slide=87 title='R markdown 火力展示'>
          87
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=88 title='總結'>
+        data-slide=88 title='shiny'>
          88
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=89 title='本週目標'>
+        data-slide=89 title='總結'>
          89
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=90 title='掌握心法後，如何自行利用R 解決問題'>
+        data-slide=90 title='本週目標'>
          90
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=91 title='你喜歡R 嗎？'>
+        data-slide=91 title='掌握心法後，如何自行利用R 解決問題'>
          91
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=92 title='Q&amp;A'>
+        data-slide=92 title='你喜歡R 嗎？'>
          92
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=93 title=''>
+        data-slide=93 title='Q&amp;A'>
          93
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=94 title=''>
+         94
       </a>
     </li>
   </ul>
