@@ -21,6 +21,7 @@ library(data.table) # data ETL
 library(dplyr)      # data ETL
 library(knitr)      # dynamic report generation, RMarkdown
 library(ggplot2)    # data Viz
+library(scales)      # show percent labels in ggplot2
 library(GGally)     # extension to ggplot2
 library(ggmap)      # extension to ggplot2
 library(geosphere)  # distance between two location (lon, lat)
@@ -29,7 +30,7 @@ library(ggdendro)
 ```
 
 ```{r loaded-data, cache=TRUE}
-ubike <- fread("advanced-EDA/data/ubikeweatherutf8.csv", 
+ubike <- fread("data/ubikeweatherutf8.csv", 
                showProgress = interactive(), data.table = FALSE)
 ```
 

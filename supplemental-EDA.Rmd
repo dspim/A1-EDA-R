@@ -29,7 +29,7 @@ library(knitr)
 #getwd()
 #setwd("E:/Rworking/DSP/advanced-EDA")
 #load("data/ubike-weather-big5.rda")
-ubike <- fread("advanced-EDA/data/ubikeweatherutf8.csv", 
+ubike <- fread("data/ubikeweatherutf8.csv", 
                 showProgress = interactive(), data.table = FALSE)
 
 ```

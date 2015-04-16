@@ -1,0 +1,522 @@
+---
+title: Advanced EDA with R
+author: 
+date:  
+output:
+  html_document:
+    theme: "spacelab"
+    css: styles.css
+    fig_width: 10
+    fig_height: 7.5
+---
+Johnson Hsieh    
+April, 2015 @ DSP A1 coures    
+[Contact me](mailto:johnson@dsp.im)｜
+[Data Analyst Training Program @ DSP](https://dsp.im/events/a1-basic-data-analysis-course-2/)    
+<br>
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(comment="", message=FALSE, warning=FALSE, echo=TRUE)
+library(data.table) # data ETL
+library(dplyr)      # data ETL
+library(knitr)      # dynamic report generation, RMarkdown
+library(ggplot2)    # data Viz
+library(scales)      # show percent labels in ggplot2
+library(GGally)     # extension to ggplot2
+library(ggmap)      # extension to ggplot2
+library(geosphere)  # distance between two location (lon, lat)
+library(reshape2)   # long and wide format
+library(ggdendro)
+```
+
+```{r loaded-data, cache=TRUE}
+ubike <- fread("data/ubikeweatherutf8.csv", 
+               showProgress = interactive(), data.table = FALSE)
+```
+
+```{r basic-summary}
+ubike1 <- filter(ubike, sno==1) %>%
+  mutate(sbi.range=max.sbi-min.sbi) %>%
+  mutate(is.rushhours=cut(hour, breaks=c(0, 8, 10, 17, 20, 24), 
+                          labels = c(0,1,0,1,0), right=FALSE)) %>%
+  mutate(is.weekday=ifelse(strftime(date, "%u") < 6, 1, 0))
+
+tab1 <- filter(ubike1, is.rushhours==1, is.weekday==1) %>% 
+  group_by(tot) %>%
+  summarise(min(sbi.range), mean(sbi.range), max(sbi.range))
+```
+
+## 探索性資料分析 — 以YouBike為例
+- 專案主題：捷運市府站Youbike租借分析
+- 小組成員：Johnson (DSP C.K.O.)
+- 角色扮演：YouBike業者御用資料科學家
+- 研究目的：捷運市府站為規模最大的YouBike場站 (共**`r tab1[1]`**個停車格)，尖峰時段期間車輛的平均出借變化量達**`r round(tab1[3])`**輛，透過該場站與週邊場站租借狀況以及天氣資料的交叉比對，找出使用者行為以提供進一步加值服務的規劃。
+- 規劃流程：
+    * 訂定主題
+    * 資料探索
+        + 市府站 vs. 天氣
+        + 市府站 vs. 週邊場站
+        + 探索關鍵因子
+    * 看圖說故事
+    * 決策建議
+<br><p>
+
+## 市府站車輛數基本數據
+
+```{r basic-barchart1}
+df1 <- group_by(ubike1, date, hour) %>%
+  summarise(rate.sbi=mean(avg.sbi)/tot) %>%
+  group_by(hour) %>%
+  summarise(rate.sbi=mean(rate.sbi))
+
+thm <- function() {
+  theme_gray(base_family = "STHeiti") + 
+  theme(text=element_text(size=18))
+}
+
+ggplot(df1, aes(x=hour, y=rate.sbi)) +
+  geom_bar(stat="identity") + 
+  ggtitle("捷運市政府站") +
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank()) + 
+  scale_y_continuous(labels = percent)
+```
+
+上圖為捷運市府站每天有車率的變化，大約晚間十點至隔天凌晨兩點間有車率 (當時段平均車輛數 / 總車輛數) 最低，係因此時YouBike公司將車輛回收，於清晨三點左右陸續將車輛補回。由圖可知三點與四點時有車率大幅增加兩次，推測是市府站規模較大需要兩次小貨車補給 (每次約補給30輛車)。在上午七點左右，有車率開始明顯下降，直至上午十點到達低點，即**`r paste(round(df1[11,2],2)*100, "%", sep="")`**。之後有車率略微增加，直至下午一點達到當日次高峰。可以發現，下午三點之後有車率再度明顯下降，直至晚間九點。<br><p>
+
+## 場站有車率與晴雨關係
+- 定義：有車率 (`rate.sbi`) 為 平均車輛數 / 總停車格數 (`avg.sbi/tot`)
+- 定義：是否下雨 (`is.rain`)，當該時段累積雨量大於1mm訂為雨天，反之為晴天
+依 日期 (`date`)、時間 (`hour`)、是否下雨 (`is.rain`) 做分組 (`group_by`) 計算
+平均有車率 (`rate.sbi = mean(avg.sbi/tot)`)，得到下表：
+
+```{r weather-barchart, results='asis'}
+df2 <- filter(ubike, sno==1) %>% 
+  mutate(is.rain=rainfall>1) %>%
+  mutate(is.rain=factor(is.rain, levels=c(FALSE, TRUE), 
+                        labels = c("晴天","雨天"))) %>%
+  select(date, hour, tot, avg.sbi, avg.bemp, temp, is.rain) %>%
+  group_by(date, hour, is.rain) %>%
+  summarise(rate.sbi=mean(avg.sbi)/tot) %>%
+  group_by(hour, is.rain) %>%
+  summarise(rate.sbi=mean(rate.sbi))
+
+kable(df2[17:22,], format="html", digits=3, align="c")
+```
+
+<br><p>
+### 長條圖範例
+首先用長條圖 (bar chart) 來探索這份報表，當欄位大於二時，將依賴顏色做區隔，一般而言長條圖有以下變型：
+- Stack plot (堆疊圖)
+- Dodge plot ()
+- Fill plot (相對堆疊)
+- Facet panels
+- Pyramid (金字塔圖)
+
+<br><p>
+- <h3>Stack plot (堆疊圖)</h3>
+Hint: `geom_bar(stat="identity", position="stack")`
+```{r weather-barchar-1}
+ggplot(df2, aes(x=hour, y=rate.sbi, fill=is.rain)) +
+  geom_bar(stat="identity") + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank())
+```
+
+<br><p>
+- <h3>Dodge plot</h3>
+Hint: `geom_bar(stat="identity", position="dodge")`
+```{r weather-barchar-2}
+ggplot(df2, aes(x=hour, y=rate.sbi, fill=is.rain)) +
+  geom_bar(stat="identity", position="dodge") + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank())
+```
+
+<br><p>
+- <h3>Fill plot</h3>
+Hint: `geom_bar(stat="identity", position="fill")`
+```{r weather-barchar-3}
+ggplot(df2, aes(x=hour, y=rate.sbi, fill=is.rain)) +
+  geom_bar(stat="identity", position="fill") + 
+  labs(x="時間", y="相對有車率") +
+  thm() +
+  theme(legend.title=element_blank())
+```
+
+<br><p>
+- <h3>Facet panels in a grid</h3>
+Hint: `facet_grid(y~.)` or `facet_grid(.~x)`
+```{r weather-barchar-4}
+ggplot(df2, aes(x=hour, y=rate.sbi, fill=is.rain)) +
+  geom_bar(stat="identity", position="dodge") + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank()) + 
+  facet_grid(is.rain~.)
+
+ggplot(df2, aes(x=hour, y=rate.sbi, fill=is.rain)) +
+  geom_bar(stat="identity", position="dodge") + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank()) + 
+  facet_grid(.~is.rain)
+```
+
+<br><p>
+- <h3>Pyramid</h3>    
+Hint: `filter(df2, is.rain=="晴天")`, and `coord_flip()`
+```{r weather-barchar-5}
+ggplot(df2, aes(x=hour,y=rate.sbi, fill=is.rain)) + 
+  geom_bar(data=filter(df2, is.rain=="晴天"), stat="identity") + 
+  geom_bar(aes(y=rate.sbi*(-1)), data=filter(df2, is.rain=="雨天"), 
+           stat="identity") + 
+  scale_y_continuous(breaks=seq(from=-1, to=1, by=0.1), 
+                     labels=abs(seq(-1, 1, 0.1))) + 
+  labs(x="時間", y="有車率") +
+  theme(legend.title=element_blank()) + 
+  coord_flip() + thm() 
+```
+
+<br><p>
+### 折線圖範例
+由於x軸的單位為時間，所以可以改用折線圖 (line chart) 來做探索，本例就比較晴、雨天有車率的差異而言，line chart 比 bar chart 更具視覺上優勢。
+
+<br><p>
+- <h3>Line chart</h3>
+由以下折線圖可知，不管在哪個時段，晴天的有車率都低於雨天，而差異最大的時段是午夜十二點前後 (Why?)，最小的時段是凌晨五點前後 (Why?)。
+
+```{r weather-linechart-1}
+ggplot(df2, aes(x=hour, y=rate.sbi, colour=is.rain, fill=is.rain)) +
+  geom_line(size=1) + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank())
+```
+
+<br><p>
+- <h3>Smoothing (平滑曲線)</h3>
+透過統計方法 (loess method)，可以迅速地描繪出平滑的趨勢線 (陰影處為95%信賴區間)。    
+Hint: `stat_smooth()`
+```{r weather-linechart-2}
+ggplot(df2, aes(x=hour, y=rate.sbi, colour=is.rain, fill=is.rain)) +
+  #geom_line() + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank()) +
+  stat_smooth(size=1)
+```
+
+<br><p>
+- <h3>Polar coordinates (極座標化)</h3>
+另一種呈現方式，又稱雷達圖 (radar chart)，賦予資料面積的概念。    
+Hint: `coord_polar()`
+```{r weather-linechart-3}
+ggplot(df2, aes(x=hour, y=rate.sbi, colour=is.rain, fill=is.rain)) +
+  #geom_line() + 
+  labs(x="時間", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank()) +
+  stat_smooth(size=1) + coord_polar()
+```
+
+
+### 熱點圖範例
+熱點圖 (heatmap) 是用顏色深淺呈現數值大小的視覺化。    
+Hint: `geom_tile()`
+```{r weather-heatmap}
+  ggplot(df2, aes(x=hour, y=is.rain, fill=rate.sbi)) + 
+  geom_tile() +
+  scale_fill_gradient(name="有車率", low="white", high="midnightblue") + 
+  labs(x="時間", y="天氣") +
+  thm()
+```
+
+### 平行座標圖
+平行座標圖 (Parallel coordinate plot) 多用於呈現多欄位的資料視覺化，強調欄位的順序性，特別適合用在因果關係的陳述。譬如：行業別 -> 是否上DSP課程 -> 職場表現。    
+Hint: `library(GGally)` and `ggparcoord()`
+```{r weather-parallelcoordinate}
+df2 <- mutate(df2, rain=as.numeric(is.rain)-1)
+ggparcoord(as.data.frame(df2), columns = c(1,4,3), groupColumn = 2) +
+  thm() + theme(legend.title=element_blank())
+```
+
+## 場站 有車率 與 使用率 的探索
+- 定義：
+  * 有車率 (`rate.sbi`) 為 平均車輛數 / 總停車格數 `(avg.sbi)/tot`
+  * 使用率 (`rate.used`) 為 (最大車輛數 - 最小車輛數) / 總停車格數 `(max.sbi-min.sbi)/tot`
+    + 係指某時段中可租借車輛的最大改變率，其值的高低可以表示該場站的出借熱門程度。
+- 目的：
+  * 觀察 平日/假日 (`is.weekday`)、是否下雨 (`is.rain`)、時間 (`hour`)、有車率 (`rate.sbi`)、使用率 (`rate.used`) 的關係
+  * 利用`dplyr`中`filter, mutate, group_by, summarise`等函數將資料整理成下表：    
+
+```{r usedrate, results='asis'}
+df3 <- filter(ubike1, sno==1) %>% 
+  mutate(is.rain=rainfall>1) %>%
+  mutate(is.rain=factor(is.rain, levels=c(FALSE, TRUE), 
+                        labels = c("晴天","雨天"))) %>%
+  mutate(is.weekday=strftime(date, "%u")<6) %>%
+  mutate(is.weekday=factor(is.weekday, levels=c(FALSE, TRUE),
+                           labels=c("平日","假日"))) %>%
+  mutate(is.rushhours=cut(hour, breaks=c(0, 4, 7, 24), right=FALSE)) %>%
+  group_by(date, is.weekday, is.rushhours, hour, is.rain) %>%
+  summarise(rate.sbi=mean(avg.sbi)/tot, rate.used=mean(max.sbi-min.sbi)/tot)
+
+kable(head(df3), format="html", digits=3, align="c")
+```
+
+<br>
+<p>
+### 散佈圖
+散佈圖 (scatterplot) 是比較兩數值變數最直覺的視覺化，主要是觀察兩變數間是否存在特殊的趨勢、群聚現象、離群值。以下方式常用來輔助散佈圖的探索：
+
+- 重新定義象限
+- 改變座標軸的尺度 (對數轉換)
+- 加入額外資訊 (大小、顏色、形狀)
+- 各種分群演算法 (K-means)
+
+```{r usedrate-scatterplot-1}
+ggplot(df3, aes(x=rate.used, y=rate.sbi)) + geom_point() + 
+  labs(x="使用率", y="有車率") + thm()
+```
+<br>
+<p>
+- <h3>定義象限</h3>
+```{r usedrate-scatterplot-2}
+ggplot(df3, aes(x=rate.used, y=rate.sbi)) + geom_point() + 
+  labs(x="使用率", y="有車率") + thm()+
+  geom_vline(xintercept=0.4, lty=2) +
+  geom_hline(yintercept=0.4, lty=2) 
+```
+
+
+<p>
+- <h3>改變座標尺度 (摩爾定律)</h3>
+<img src='http://goo.gl/rHiu0i' style='max-width: 100%;max-height: 100%'></img>
+</p>
+<br>
+<p>
+- <h3>利用顏色分類</h3>
+Hint: `aes(colour=is.rushhours)`    
+```{r usedrate-scatterplot-3}
+ggplot(df3, aes(x=rate.used, y=rate.sbi)) + 
+  labs(x="使用率", y="有車率") + thm() +
+  geom_point(aes(colour=is.rushhours), position="jitter")
+```
+
+
+<br>
+<p>
+- <h3>Facet grid, color, and shape</h3>    
+Hint: `aes(colour=is.rushhours, shape=is.weekday)`    
+```{r usedrate-scatterplot-4}
+ggplot(df3, aes(x=rate.used, y=rate.sbi)) + 
+  geom_point(aes(colour=is.rushhours, shape=is.weekday), position="jitter") +
+  facet_grid(is.weekday~is.rushhours) + 
+  labs(x="使用率", y="有車率") +
+  thm() +
+  theme(legend.title=element_blank())
+
+df4 <- filter(df3, hour>6 & hour < 10)
+
+ggplot(df4, aes(x=rate.used, y=rate.sbi)) + 
+  geom_point(aes(colour=paste(as.character(is.weekday),
+                              as.character(is.rain), sep="-"))) +
+  ggtitle("每日7-9點 YouBike使用狀況") +
+  labs(x="使用率", y="有車率") +
+  facet_grid(is.rain~is.weekday) + 
+  thm() +
+  theme(legend.title=element_blank())
+```
+
+
+## 與鄰近場站的關係
+```{r neighborhood-1}
+tmp <- group_by(ubike, sno, sna, sarea, lat, lng) %>% distinct 
+dist <- round(distm(x=tmp[, c("lng","lat")])[,1])
+df5 <- tmp %>% select(sno, sna, sarea, lat, lng) %>% 
+  cbind(dist) %>% arrange(dist) %>% top_n(10, wt = -dist)
+```
+研究完單一場站之後，試著探索市府站與鄰近場站的關係，此時需要透過經緯度計算場站與場站之間的距離。透過`geosphere`套件中的`distm`函數可以批次計算所有場站之間的兩兩距離，整理得到下表，離捷運市府站最近的場站依序是**`r df5[2,2]` (`r df5[2,6]`m)**, **`r df5[3,2]` (`r df5[3,6]`m)**...。    
+Hint: `library(geosphere)`, `distm`, `group_by`, `distinct`
+<br>
+```{r neighborhood-2, results='asis'}
+kable(df5, format="html", digits=3, align="c")
+```
+
+<br>
+<p>
+### 地圖應用範例
+利用`ggmap`套件導入google map作為底圖將場站位置標示出來。    
+Hint: `library(ggmap)`, `map <- get_map("Taipei"); ggmap(map)`, `geom_point`    
+```{r map-1, results='asis'}
+df5$is.cityhall <- factor(c(1, rep(0, 9)), levels=1:0)
+map <- get_map(location=c(lon=df5$lng[1], lat=df5$lat[1]) , zoom = 15)
+ggmap(map) + thm() +
+  geom_point(data=df5, aes(x=lng, y=lat, colour=is.cityhall), size=5) + 
+  geom_text(data=df5, aes(x=lng, y=lat, label=sna, colour=is.cityhall), 
+            position="jitter", vjust=-1, hjust=0.5, size=4, family="STHeiti") + 
+  theme(legend.position="none") + scale_color_brewer(palette="Set1")
+```
+
+<br>
+<p>
+練習用`geom_point(size=tot)`來改變場站標示的大小。    
+```{r map-2}
+df5 <- group_by(tmp) %>% select(sno, tot) %>% 
+  right_join(df5, by="sno") %>%
+  `[`(c(1, 3, 4, 2, 5, 6, 7, 8)) 
+map <- get_map(location=c(lon=df5$lng[1], lat=df5$lat[1]) , 
+               maptype = "roadmap", zoom = 15)
+
+ggmap(map) + thm() +
+  geom_point(data=df5, aes(x=lng, y=lat, colour=is.cityhall, size=tot)) + 
+  theme(legend.position="none") + scale_color_brewer(palette="Set1") +
+  scale_size(range = c(3,12))
+```
+
+<br>
+<p>
+### 熱點圖進階應用
+觀察鄰近捷運市府站的10個YouBike場站，每一天 有車率 與 使用率的狀況。以有車率為例，透過觀察可以發現{興雅國中, 台北市政府, 市民廣場, 世貿三館, 世貿二館} 時間分佈有相似的狀況，{永吉松信路口, 松德公園, 捷運永春站} 也有相似的情況，而捷運市府站介於兩群之間，仁愛逸仙路口則是一枝獨秀。    
+
+- 使用率的熱點圖可以看到什麼趨勢？
+- 有沒有自動排序的統計方法？
+
+```{r cluster-heatmap-1}
+tmp1 <- filter(ubike, sno%in%df5$sno) %>%
+  mutate(is.rain=rainfall>1) %>%
+  mutate(is.rain=factor(is.rain, levels=c(FALSE, TRUE), 
+                        labels = c("晴天","雨天"))) %>%
+  mutate(is.weekday=strftime(date, "%u")<6) %>%
+  mutate(is.weekday=factor(is.weekday, levels=c(FALSE, TRUE),
+                           labels=c("平日","假日"))) %>%
+  mutate(is.rushhours=cut(hour, breaks=c(0, 4, 7, 24), right=FALSE)) %>%
+  group_by(date, sno, sna, is.weekday, is.rushhours, is.rain, hour, tot) %>%
+  summarise(rate.sbi=mean(avg.sbi)/tot, rate.used=mean(max.sbi-min.sbi)/tot)
+
+df6 <- tmp1 %>%
+  filter(is.weekday=="平日", is.rain=="晴天") %>%
+  group_by(sno, sna, sna, hour) %>%
+  summarise(rate.sbi=mean(rate.sbi), rate.used=mean(rate.used))
+
+ggplot(df6, aes(x=hour, y=sna, fill=rate.sbi)) + geom_tile() + thm() + 
+  theme(legend.position="bottom") + 
+  scale_fill_gradient(name="有車率", low="white", high="lawngreen") + 
+  labs(x="時間", y="") +
+  theme(axis.text = element_text(size = 13, color="darkgreen"))
+
+ggplot(df6, aes(x=hour, y=sna, fill=rate.used)) + geom_tile() + thm() + 
+  theme(legend.position="bottom") + 
+  scale_fill_gradient(name="使用率", low="white", high="Navy") + 
+  labs(x="時間", y="") +
+  theme(axis.text = element_text(size = 13, color="darkblue"))
+```
+
+<br>
+<p>
+- <h3>heatmap 排序</h3>
+當heatmap的x軸或y軸為類別變數時，可以經由階層分群法 (hierarchical clustering) 做行或列的排序。    
+
+- 首先我們需要一個 場站對時間 (sna ~ hour) 的有車率 (rate.sbi) 矩陣 (`dcast`)
+- 使用階層分群演算法 (`hclust`)
+- 畫出分群樹狀圖 (`ggdendrogram`)
+- 取得排序 (`order`)
+
+Hint: `library(reshape2)`, `library(ggdendro)` 
+```{r cluster-heatmap-2}
+dat <- dcast(df6, sna~hour, value.var="rate.sbi")
+rownames(dat) <- dat[,1]
+dat <- dat[,-1]
+kable(dat[,8:13], format = "html", digits = 3, row.names = TRUE)
+
+hc.sna <- hclust(dist(dat))
+ggdendrogram(hc.sna, rotate = TRUE) + thm() + labs(x="", y="")
+
+# hc.sna$order
+sna.order <- data.frame(order=1:10, sna=hc.sna$labels[hc.sna$order])
+kable(sna.order, format = "html")
+
+df7 <- df6
+df7$sna <- factor(df7$sna, levels=(sna.order[,2]))
+ggplot(df7, aes(x=hour, y=sna, fill=rate.sbi)) + geom_tile() + thm() + 
+  theme(legend.position="bottom") + 
+  scale_fill_gradient(name="有車率", low="white", high="lawngreen") + 
+  labs(x="時間", y="") +
+  theme(axis.text = element_text(size = 13, color="darkgreen"))
+```
+
+<br>
+<p>
+- <h3>對時間做排序</h3>
+```{r cluster-heatmap-3}
+hc.hour <- hclust(dist(t(dat)))
+ggdendrogram(hc.hour) + thm() + labs(x="", y="")
+
+hour.order <- data.frame(order=1:24, sna=hc.hour$labels[hc.hour$order])
+# kable(hour.order, format = "html")
+
+df7$hour <- factor(df7$hour, levels=(hour.order[,2]))
+
+ggplot(df7, aes(x=hour, y=sna, fill=rate.sbi)) + geom_tile() + thm() + 
+  theme(legend.position="bottom") + 
+  scale_fill_gradient(name="有車率", low="white", high="lawngreen") + 
+  labs(x="時間", y="") +
+  theme(axis.text = element_text(size = 13, color="darkgreen"))
+```
+
+<br>
+<p>
+- <h3>試著對 使用率 進行排序</h3>
+```{r cluster-heatmap-4}
+dat <- dcast(df6, sna~hour, value.var="rate.used")
+rownames(dat) <- dat[,1]
+dat <- dat[,-1]
+hc.sna <- hclust(dist(dat))
+hc.hour <- hclust(dist(t(dat)))
+df8 <- df6
+df8$sna <- factor(df8$sna, levels = hc.sna$labels[hc.sna$order])
+df8$hour <- factor(df8$hour, levels = hc.hour$labels[hc.hour$order])
+ggplot(df8, aes(x=hour, y=sna, fill=rate.used)) + geom_tile() + thm() + 
+  theme(legend.position="bottom") + 
+  scale_fill_gradient(name="使用率", low="white", high="Navy") + 
+  labs(x="時間", y="") +
+  theme(axis.text = element_text(size = 13, color="darkblue"))
+```
+
+<br>
+<p>
+### 平行座標圖進階應用
+平行座標圖常用來展示不同群組在諸多變數間的差異性，當群組分類方式未知時，可以利用機器學習 (machine learning) 中的非監督式學習 (unsupervised learning)，幫資料做分群。分群之後再藉由平行座標圖來呈現資料的脈絡。
+
+- 選擇 平日, 晴天, 7-21時鄰近市府站的資料進行分析
+- 以場站大小 (`tot`)、有車率 (`rate.sbi`)、使用率 (`rate.used`) 三個變數做分群
+- 使用K-means演算法分3群
+- 將分群結果視作新的變數畫平行座標圖
+
+<br>
+<p>
+```{r clustering}
+tmp2 <- filter(tmp1, is.weekday=="平日", is.rain=="晴天", hour>6 & hour<22) %>%
+  group_by(sno, sna, tot) %>%
+  summarise(rate.sbi=mean(rate.sbi), rate.used=mean(rate.used))
+km <- kmeans(tmp2[,3:5], 3)
+km
+
+df9 <- group_by(tmp2) %>% 
+  transmute(sna, tot, rate.sbi, rate.used,
+            group=factor(km$cluster))  %>% 
+  arrange(group)
+
+ggparcoord(as.data.frame(df9), columns = c(1,2,3,4), groupColumn = 5,
+           scale="uniminmax") + 
+  geom_line(size=1) + thm() + theme(legend.title=element_blank()) +
+  scale_x_discrete(labels=c("場站","總停車格","有車率","使用率")) +
+  labs(x="", y="")
+
+kable(df9, format="html", digits=3, align="c")
+```
+
