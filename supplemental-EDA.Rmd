@@ -1,0 +1,94 @@
+---
+title: Supplement of dplyr & ggplot2
+author:
+date: 
+output:
+  html_document:
+    theme: "spacelab"
+    css: styles.css
+    fig_width: 10
+    fig_height: 7.5
+---
+George Chao    
+April, 2015 @ DSP A1 coures  
+[Contact me](mailto:whizzalan@gmail.com)｜
+[Data Analyst Training Program @ DSP](https://dsp.im/events/a1-basic-data-analysis-course-2/)    
+<br>
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(comment="", message=FALSE, warning=FALSE)
+library(data.table)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+# options(markdown.HTML.stylesheet = stylesheetName)
+# knit2html(rmdName, output = htmlName) 
+```
+
+```{r loaded-data, include=FALSE, cache=TRUE}
+#getwd()
+#setwd("E:/Rworking/DSP/advanced-EDA")
+#load("data/ubike-weather-big5.rda")
+ubike <- fread("advanced-EDA/data/ubikeweatherutf8.csv", 
+                showProgress = interactive(), data.table = FALSE)
+
+```
+
+### mutate: 創建新變數有車機率
+```{r rate.sbi}
+df1 <- mutate(ubike, rate.sbi = mean(avg.sbi)/tot)
+```
+  透過創建感興趣的變數，做進一步描述，得到**有車機率**可以進一步分析各地區情況。
+
+### Ex1 - 學習定義新變數
+  - 是否為工作日(平日/假日)
+  - 是否下雨(晴天/雨天)
+
+### Ex2 - 統計各行政區測站數與總車輛數
+可以嘗試利用下列指令建立出下表  
+  - **`group_by`、`summarise`、`n_distinct`、`sum`、`filter`**
+```{r df.sum, echo=FALSE}
+df.sum <- ubike  %>%  
+  filter(date == "2014-12-09" & hour == 15) %>%
+  group_by(sarea) %>%
+  summarise(n_distinct(sna), sum(tot))
+df.sum
+```
+  由上表可以觀察到**`r df.sum[ df.sum[,2]==max(df.sum[,2]) ,1]`** 為台北市最多測站所屬行政區  
+  而相對應的也是最多車輛所屬區域，進一步可以思考是否也是所需車量之人口最多的地區?  
+  此時會關心在有車機率整體下，是否個測站車輛配置都良好？
+
+
+### boxplot: 描述各地區有車機率
+```{r boxplot}
+thm <- function() {
+  theme_gray(base_family = "STHeiti") + 
+  theme(text=element_text(size=18))
+}
+
+ggplot(df1, aes(x = sarea, y = rate.sbi)) + 
+  ggtitle("各地區有車機率") + 
+  geom_boxplot() +  # 挑選boxplot主題
+  labs(x="行政區", y="有車率") + #給標籤名稱
+  coord_flip()  + #將資料平放
+  thm()
+```
+由上圖可以觀察到  
+1. **南港區**跟**中山區**有車機率整體較高，推論車輛配置情況較好。  
+2. **信義區** 有車機率range較大，可能原因有是人潮變動較大或車輛配置情況較差，還是否有其他因素?  
+3. 嚴格說起來**中和區**跟**蘆洲區**整體有車機率較低，是車輛本身較少或屬於外圍地區騎乘者不易經過而停車?  
+
+### Ex3 - 大安區觀察資料整體外觀
+試練習做出下列boxplot，並嘗試解釋你看到甚麼?  
+```{r echo=FALSE}
+df.daan <- df1  %>% filter(sarea == '大安區')
+ggplot(df.daan, aes(x = sna, y = max.sbi)) + 
+  ggtitle("大安區") + 
+  geom_boxplot() +  # 挑選boxplot主題
+  labs(x="測站", y="最大車輛數") + #給標籤名稱
+  coord_flip() +  #將資料平放
+  thm()
+```
+
+
+

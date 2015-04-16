@@ -35,7 +35,7 @@ fig2 <- function(path, size = 100) {
 sys_name <- Sys.info()["sysname"] %>% tolower
 sys_encode <- c("utf8", "utf8", "big5")[pmatch(sys_name, c("linux", "darwin", "windows"))]
 sessionInfo() %>% capture.output %>% cat(file = "sessionInfo.log", sep = "\n")
-thm <- theme(text=element_text(size=18))
+thm <- theme(text=element_text(size=18)) + theme_gray(base_family="STHeiti")
 las2 <- theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
