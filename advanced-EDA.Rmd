@@ -244,6 +244,12 @@ ggparcoord(as.data.frame(df2), columns = c(1,4,3), groupColumn = 2) +
   thm() + theme(legend.title=element_blank())
 ```
 
+```{r weather-parallelcoordinate-2}
+ggparcoord(data = iris, columns = 1:4, groupColumn = 5,
+           title = "Parallel Coordinate Plot for the Iris Data") + thm()
+```
+
+
 ## 場站 有車率 與 使用率 的探索
 - 定義：
   * 有車率 (`rate.sbi`) 為 平均車輛數 / 總停車格數 `(avg.sbi)/tot`
